@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentView xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:pageModels="clr-namespace:SolarLab.AdvertBoard.Mobile.Presentation.PageModels"     
+             xmlns:models="clr-namespace:SolarLab.AdvertBoard.Mobile.Contracts.Categories;assembly=SolarLab.AdvertBoard.Mobile.Contracts"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="SolarLab.AdvertBoard.Mobile.Presentation.Pages.Controls.Categories.CategoriesView"
+             x:DataType="pageModels:MainPageModel">
+    
+    <!--Row 1: Горизонтальные категории-->
+    <CollectionView
+        ItemsSource="{Binding Categories}"
+        ItemsLayout="HorizontalList"
+        HeightRequest="50"
+        SelectionMode="Single"
+        SelectedItem="{Binding SelectedCategory}"
+        Margin="0,10,0,0" 
+>
+        <CollectionView.ItemTemplate>
+            <DataTemplate x:DataType="models:CategoryNode">
+                <Border Padding="10,5"
+                    Margin="0,0,10,0"
+                    BackgroundColor="{AppThemeBinding Light={StaticResource LightSecondaryBackground}, Dark={StaticResource DarkSecondaryBackground}}">
+
+                    <Label Text="{Binding Title}"
+                        VerticalOptions="Center"
+                        HorizontalOptions="Center"
+                        TextColor="{AppThemeBinding Light={StaticResource DarkOnLightBackground}, Dark={StaticResource LightOnDarkBackground}}" />
+                </Border>
+            </DataTemplate>
+        </CollectionView.ItemTemplate>
+    </CollectionView>
+</ContentView>
