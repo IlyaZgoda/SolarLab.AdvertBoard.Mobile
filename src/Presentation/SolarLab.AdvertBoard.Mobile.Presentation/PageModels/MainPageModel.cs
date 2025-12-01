@@ -9,69 +9,55 @@ using System.Diagnostics;
 
 namespace SolarLab.AdvertBoard.Mobile.Presentation.PageModels
 {
-    public partial class MainPageModel : ObservableObject, IProjectTaskPageModel
+    // Application Layer / Services
+    public interface ICategoryStore
+    {
+        ObservableCollection<CategoryNode> Categories { get; }
+    }
+
+    public class CategoryStore : ICategoryStore
+    {
+        public ObservableCollection<CategoryNode> Categories { get; } = new();
+    }
+
+    public partial class MainPageModel : ObservableObject, IQueryAttributable
     {
         private bool _isNavigatedTo;
         private bool _categoriesLoaded;
-        private readonly ProjectRepository _projectRepository;
-        private readonly TaskRepository _taskRepository;
-        private readonly CategoryRepository _categoryRepository;
-        private readonly ModalErrorHandler _errorHandler;
-        private readonly SeedDataService _seedDataService;
-        private readonly ICategoryApiClient _categoryApiClient;
-        private readonly IAdvertApiClient _advertApiClient;
-        [ObservableProperty]
-        private List<CategoryChartData> _todoCategoryData = [];
-
-        [ObservableProperty]
-        private List<Brush> _todoCategoryColors = [];
-
-        [ObservableProperty]
-        private List<ProjectTask> _tasks = [];
-
-        [ObservableProperty]
-        private List<Project> _projects = [];
-
-        [ObservableProperty]
-        bool _isBusy;
+        public bool HasActiveFilters => _appliedFilters != null &&
+    (_appliedFilters.MinPrice.HasValue ||
+     _appliedFilters.MaxPrice.HasValue ||
+     _appliedFilters.CategoryId != null ||
+     !string.IsNullOrEmpty(_appliedFilters.SearchText) ||
+     (_appliedFilters.SortBy != null && _appliedFilters.SortDescending != true));
+        public MainPageModel(
+        ModalErrorHandler errorHandler,
+        ICategoryApiClient categoryApiClient,
+        IAdvertApiClient advertApiClient,
+        ICategoryStore categoryStore,
+        FiltersPageModel filters)
+        {
+            this.errorHandler = errorHandler;
+            this.categoryApiClient = categoryApiClient;
+            this.advertApiClient = advertApiClient;
+            this.categoryStore = categoryStore;
+            this.filters = filters;
+        }
 
         [ObservableProperty]
         bool _isRefreshing;
 
         [ObservableProperty]
-        private string _today = DateTime.Now.ToString("dddd, MMM d");
-
-        [ObservableProperty]
-        private Project? selectedProject;
-
-        public bool HasCompletedTasks
-            => Tasks?.Any(t => t.IsCompleted) ?? false;
+        private string? searchQuery;
 
 
-        [ObservableProperty]
-        private ObservableCollection<CategoryNode> categories = new();
-
-        private CategoryTreeResponse? fullTree;
-
-        public ObservableCollection<PublishedAdvertItem> Adverts { get; } = new();
+        public ObservableCollection<PublishedAdvertItem> Adverts { get; } = [];
 
         [ObservableProperty] private bool isLoadingNextPage;
         private int _page = 1;
         private bool _hasMore = true;
 
-        public MainPageModel(SeedDataService seedDataService, ProjectRepository projectRepository,
-            TaskRepository taskRepository, CategoryRepository categoryRepository, ModalErrorHandler errorHandler,
-            ICategoryApiClient categoryApiClient, IAdvertApiClient advertApiClient)
-        {
-            _projectRepository = projectRepository;
-            _taskRepository = taskRepository;
-            _categoryRepository = categoryRepository;
-            _errorHandler = errorHandler;
-            _seedDataService = seedDataService;
-            _categoryApiClient = categoryApiClient;
-            _advertApiClient = advertApiClient;
-        }
-
+        public ObservableCollection<CategoryNode> Categories => categoryStore.Categories;
         private async Task LoadFirstPageAsync()
         {
             _page = 1;
@@ -84,6 +70,18 @@ namespace SolarLab.AdvertBoard.Mobile.Presentation.PageModels
         }
 
         [RelayCommand]
+        private async Task ExecuteSearch()
+        {
+            // Создаём новый объект фильтра, не изменяя рекорд напрямую
+            _appliedFilters = _appliedFilters is not null
+                ? _appliedFilters with { SearchText = SearchQuery, Page = 1 }
+                : new AdvertFilterRequest { SearchText = SearchQuery, Page = 1 };
+
+            await LoadFirstPageAsync(); // Загружаем первую страницу с новым фильтром
+        }
+
+
+        [RelayCommand]
         public async Task LoadNextPageAsync()
         {
             if (!_hasMore || IsLoadingNextPage)
@@ -93,13 +91,12 @@ namespace SolarLab.AdvertBoard.Mobile.Presentation.PageModels
             {
                 IsLoadingNextPage = true;
 
-                var filter = new AdvertFilterRequest
-                {
-                    Page = _page,
-                    PageSize = 10,
-                };
+                var filter = _appliedFilters is not null
+           ? _appliedFilters with { SearchText = SearchQuery, Page = 1 }
+           : new AdvertFilterRequest { SearchText = SearchQuery, Page = 1 };
 
-                var response = await _advertApiClient.GetPublishedAsync(filter);
+
+                var response = await advertApiClient.GetPublishedAsync(filter);
 
                 foreach (var item in response.Items)
                     Adverts.Add(item);
@@ -118,68 +115,18 @@ namespace SolarLab.AdvertBoard.Mobile.Presentation.PageModels
         {
             try
             {
-                fullTree = await _categoryApiClient.GetCategoryTreeAsync();
-
+                var fullTree = await categoryApiClient.GetCategoryTreeAsync();
                 if (fullTree?.Categories != null)
                 {
-                    Categories.Clear();
+                    categoryStore.Categories.Clear();
                     foreach (var node in fullTree.Categories)
-                    {
-                        Categories.Add(node); 
-                    }
+                        categoryStore.Categories.Add(node);
                 }
             }
             catch (Exception ex)
             {
                 Debug.WriteLine($"Ошибка загрузки категорий: {ex.Message}");
             }
-        }
-
-        private async Task LoadData()
-        {
-            try
-            {
-                IsBusy = true;
-
-                Projects = await _projectRepository.ListAsync();
-
-                var chartData = new List<CategoryChartData>();
-                var chartColors = new List<Brush>();
-
-                var categories = await _categoryRepository.ListAsync();
-                foreach (var category in categories)
-                {
-                    chartColors.Add(category.ColorBrush);
-
-                    var ps = Projects.Where(p => p.CategoryID == category.ID).ToList();
-                    int tasksCount = ps.SelectMany(p => p.Tasks).Count();
-
-                    chartData.Add(new(category.Title, tasksCount));
-                }
-
-                TodoCategoryData = chartData;
-                TodoCategoryColors = chartColors;
-
-                Tasks = await _taskRepository.ListAsync();
-            }
-            finally
-            {
-                IsBusy = false;
-                OnPropertyChanged(nameof(HasCompletedTasks));
-            }
-        }
-
-        private async Task InitData(SeedDataService seedDataService)
-        {
-            bool isSeeded = Preferences.Default.ContainsKey("is_seeded");
-
-            if (!isSeeded)
-            {
-                await seedDataService.LoadSeedDataAsync();
-            }
-
-            Preferences.Default.Set("is_seeded", true);
-            await Refresh();
         }
 
         [RelayCommand]
@@ -193,7 +140,7 @@ namespace SolarLab.AdvertBoard.Mobile.Presentation.PageModels
             }
             catch (Exception e)
             {
-                _errorHandler.HandleError(e);
+                errorHandler.HandleError(e);
             }
             finally
             {
@@ -228,37 +175,57 @@ namespace SolarLab.AdvertBoard.Mobile.Presentation.PageModels
         }
 
         [RelayCommand]
-        private Task TaskCompleted(ProjectTask task)
+        private Task OpenFilters() =>
+            Shell.Current.GoToAsync("filters");
+
+        private AdvertFilterRequest? _appliedFilters;
+        private ModalErrorHandler errorHandler;
+        private ICategoryApiClient categoryApiClient;
+        private IAdvertApiClient advertApiClient;
+        private ICategoryStore categoryStore;
+        private FiltersPageModel filters;
+
+        public async void ApplyQueryAttributes(IDictionary<string, object> query)
         {
-            OnPropertyChanged(nameof(HasCompletedTasks));
-            return _taskRepository.SaveItemAsync(task);
-        }
-
-        [RelayCommand]
-        private Task AddTask()
-            => Shell.Current.GoToAsync($"task");
-
-        [RelayCommand]
-        private Task? NavigateToProject(Project project)
-            => project is null ? null : Shell.Current.GoToAsync($"project?id={project.ID}");
-
-        [RelayCommand]
-        private Task NavigateToTask(ProjectTask task)
-            => Shell.Current.GoToAsync($"task?id={task.ID}");
-
-        [RelayCommand]
-        private async Task CleanTasks()
-        {
-            var completedTasks = Tasks.Where(t => t.IsCompleted).ToList();
-            foreach (var task in completedTasks)
+            if (query.TryGetValue("AppliedFilters", out var f))
             {
-                await _taskRepository.DeleteItemAsync(task);
-                Tasks.Remove(task);
+                var filters = (AdvertFilterRequest)f;
+                _appliedFilters = filters;
+                OnPropertyChanged(nameof(HasActiveFilters));
+                // перезагрузка списка
+                await LoadFirstPageAsync();
             }
-
-            OnPropertyChanged(nameof(HasCompletedTasks));
-            Tasks = new(Tasks);
-            await AppShell.DisplayToastAsync("All cleaned up!");
         }
+
+        [RelayCommand]
+        private async Task OpenFiltersWithCategory(CategoryNode category)
+        {
+            var filters = new AdvertFilterRequest
+            {
+                CategoryId = category.Id
+            };
+
+            await Shell.Current.GoToAsync("filters", new Dictionary<string, object>
+    {
+        { "AppliedFilters", filters }
+    });
+        }
+
+        [ObservableProperty]
+        private CategoryNode? selectedCategory;
+
+        partial void OnSelectedCategoryChanged(CategoryNode? value)
+        {
+            if (value == null) return;
+
+            // Навигация асинхронно
+            _ = OpenFiltersWithCategoryCommand.ExecuteAsync(value);
+
+            // Сбрасываем SelectedItem
+            SelectedCategory = null;
+        }
+
+
+
     }
 }

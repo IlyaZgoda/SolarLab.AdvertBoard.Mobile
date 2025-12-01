@@ -12,5 +12,5 @@
     /// <param name="Id">Идентификатор категории.</param>
     /// <param name="Title">Название категории.</param>
     /// <param name="Children">Коллекция дочерних категорий.</param>
-    public record CategoryNode(Guid Id, string Title, List<CategoryNode> Children);
+    public record CategoryNode(Guid Id, Guid? ParentId, string Title, List<CategoryNode> Children);
 }

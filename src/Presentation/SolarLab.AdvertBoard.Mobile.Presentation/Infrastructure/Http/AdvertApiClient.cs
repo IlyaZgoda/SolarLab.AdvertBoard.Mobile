@@ -15,6 +15,12 @@ namespace SolarLab.AdvertBoard.Mobile.Presentation.Infrastructure.Http
             {
                 ["Page"] = filter.Page.ToString(),
                 ["PageSize"] = filter.PageSize.ToString(),
+                ["CategoryId"] = filter.CategoryId.ToString(),
+                ["MinPrice"] = filter.MinPrice.ToString(),
+                ["MaxPrice"] = filter.MaxPrice.ToString(),
+                ["SortBy"] = filter.SortBy,
+                ["SortDescending"] = filter.SortDescending.ToString(),
+                ["SearchText"] = filter.SearchText,
             };
 
             var url = QueryHelpers.AddQueryString("/api/adverts", parameters);

@@ -12,7 +12,12 @@
         Icon="{StaticResource IconDashboard}"
         ContentTemplate="{DataTemplate pages:MainPage}"
         Route="main" />
-
+    
+    <ShellContent 
+        Route="filters" 
+        ContentTemplate="{DataTemplate pages:FiltersPage}" />
+    
+    
     <!--<ShellContent
         Title="Projects"
         Icon="{StaticResource IconProjects}"

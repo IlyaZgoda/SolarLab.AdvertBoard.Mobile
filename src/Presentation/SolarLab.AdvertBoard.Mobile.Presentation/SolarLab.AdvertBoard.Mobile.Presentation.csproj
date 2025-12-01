@@ -81,6 +81,9 @@
 	  <Compile Update="Pages\Controls\Adverts\AdvertListItemView.xaml.cs">
 	    <DependentUpon>AdvertListItemView.xaml</DependentUpon>
 	  </Compile>
+	  <Compile Update="Pages\FiltersPage.xaml.cs">
+	    <DependentUpon>FiltersPage.xaml</DependentUpon>
+	  </Compile>
 	</ItemGroup>
 
 	<ItemGroup>
@@ -93,9 +96,32 @@
 	  <MauiXaml Update="Pages\Controls\Categories\CategoriesView.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>
+	  <MauiXaml Update="Pages\Controls\Filters\CategoryLevelSelectorView.xaml">
+	    <Generator>MSBuild:Compile</Generator>
+	  </MauiXaml>
+	  <MauiXaml Update="Pages\Controls\Filters\FilterCategoryBreadcrumbView.xaml">
+	    <Generator>MSBuild:Compile</Generator>
+	  </MauiXaml>
+	  <MauiXaml Update="Pages\Controls\Filters\FiltersHeaderView.xaml">
+	    <Generator>MSBuild:Compile</Generator>
+	  </MauiXaml>
+	  <MauiXaml Update="Pages\Controls\Filters\PriceFilterView.xaml">
+	    <Generator>MSBuild:Compile</Generator>
+	  </MauiXaml>
+	  <MauiXaml Update="Pages\Controls\Filters\SortFilterView.xaml">
+	    <Generator>MSBuild:Compile</Generator>
+	  </MauiXaml>
 	  <MauiXaml Update="Pages\Controls\MainPageHeaderView.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>
+	  <MauiXaml Update="Pages\FiltersPage.xaml">
+	    <Generator>MSBuild:Compile</Generator>
+	  </MauiXaml>
+	</ItemGroup>
+
+	<ItemGroup>
+	  <Folder Include="Application\Categories\GetCategoryTree\" />
+	  <Folder Include="Application\Services\" />
 	</ItemGroup>
 	
 </Project>

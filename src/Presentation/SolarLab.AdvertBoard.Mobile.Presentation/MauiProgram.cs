@@ -1,4 +1,5 @@
-﻿using CommunityToolkit.Maui;
+﻿using Android.Content.Res;
+using CommunityToolkit.Maui;
 using Microsoft.Extensions.Logging;
 using SolarLab.AdvertBoard.Mobile.Presentation.Infrastructure.Http;
 using Syncfusion.Maui.Toolkit.Hosting;
@@ -50,6 +51,20 @@ namespace SolarLab.AdvertBoard.Mobile.Presentation
     		builder.Services.AddLogging(configure => configure.AddDebug());
 #endif
 
+#if ANDROID
+            Microsoft.Maui.Handlers.EntryHandler.Mapper.AppendToMapping(nameof(Entry), (handler, view) =>
+            {
+                if (view is Entry)
+                {
+                    // Убираем нижнюю линию
+                    handler.PlatformView.BackgroundTintList = ColorStateList.ValueOf(Android.Graphics.Color.Transparent);
+
+                    // Меняем цвет плейсхолдера
+                    handler.PlatformView.SetHintTextColor(ColorStateList.ValueOf(Android.Graphics.Color.Gray));
+                }
+            });
+#endif
+
             builder.Services.AddSingleton<ProjectRepository>();
             builder.Services.AddSingleton<TaskRepository>();
             builder.Services.AddSingleton<CategoryRepository>();
@@ -57,6 +72,7 @@ namespace SolarLab.AdvertBoard.Mobile.Presentation
             builder.Services.AddSingleton<SeedDataService>();
             builder.Services.AddSingleton<ModalErrorHandler>();
             builder.Services.AddSingleton<MainPageModel>();
+            builder.Services.AddSingleton<FiltersPageModel>();
             builder.Services.AddSingleton<ProjectListPageModel>();
             builder.Services.AddSingleton<ManageMetaPageModel>();
 
@@ -70,6 +86,7 @@ namespace SolarLab.AdvertBoard.Mobile.Presentation
 
             builder.Services.AddTransient<ICategoryApiClient, CategoryApiClient>();
             builder.Services.AddTransient<IAdvertApiClient, AdvertApiClient>();
+            builder.Services.AddSingleton<ICategoryStore, CategoryStore>();
 
             return builder.Build();
         }

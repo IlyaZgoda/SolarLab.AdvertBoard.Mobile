@@ -1,7 +1,9 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <ContentView xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             x:Class="SolarLab.AdvertBoard.Mobile.Presentation.Pages.Controls.MainPageHeaderView">
+             x:Class="SolarLab.AdvertBoard.Mobile.Presentation.Pages.Controls.MainPageHeaderView"
+             xmlns:pageModels="clr-namespace:SolarLab.AdvertBoard.Mobile.Presentation.PageModels"  
+             x:DataType="pageModels:MainPageModel">
     <!--Row 0: Шапка-->
     <Grid Grid.Row="0"  ColumnDefinitions="Auto,*,Auto,Auto" ColumnSpacing="{StaticResource LayoutSpacing}" BackgroundColor="Transparent">
         <Grid.GestureRecognizers>
@@ -37,20 +39,28 @@
                     BackgroundColor="Transparent"
                     VerticalOptions="Center"
                     FontSize="16"
-                    Focused="OnSearchFocused"
-                    Unfocused="OnSearchUnfocused"
+                    Text="{Binding SearchQuery, Mode=TwoWay}"
+                    Completed="OnSearchCompleted"
                     TextColor="{AppThemeBinding Light={StaticResource DarkOnLightBackground}, Dark={StaticResource LightOnDarkBackground}}"
                     PlaceholderColor="{AppThemeBinding Light={StaticResource Gray500}, Dark={StaticResource Gray400}}" />
 
                 <!--Иконка фильтров-->
                 <Image Grid.Column="2"
-                    Source="{StaticResource IconFilter}"
                     HeightRequest="22"
                     WidthRequest="22"
-                    VerticalOptions="Center">
+                    VerticalOptions="Center"
+                    Source="{StaticResource IconFilter}">
                     <Image.GestureRecognizers>
-                        <TapGestureRecognizer Command="{Binding OpenFiltersCommand}" Tapped="OnFilterTapped"/>
+                        <TapGestureRecognizer Command="{Binding OpenFiltersCommand}" />
                     </Image.GestureRecognizers>
+
+                    <Image.Triggers>
+                        <DataTrigger TargetType="Image"
+                     Binding="{Binding HasActiveFilters}" 
+                     Value="True">
+                            <Setter Property="Source" Value="{StaticResource IconAppliedFilter}" />
+                        </DataTrigger>
+                    </Image.Triggers>
                 </Image>
 
             </Grid>

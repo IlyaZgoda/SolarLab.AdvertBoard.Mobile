@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentView xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:pageModels="clr-namespace:SolarLab.AdvertBoard.Mobile.Presentation.PageModels"   
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="SolarLab.AdvertBoard.Mobile.Presentation.Pages.Controls.Filters.FiltersHeaderView"
+             x:DataType="pageModels:FiltersPageModel">
+    
+    <Grid ColumnDefinitions="Auto,*,Auto" Padding="0,8" HeightRequest="48">
+
+        <!-- Кнопка закрытия -->
+        <Image
+            Grid.Column="0"
+            Source="{StaticResource CloseIcon}"
+            WidthRequest="22"
+            HeightRequest="22"
+            VerticalOptions="Center">
+            <Image.GestureRecognizers>
+                <TapGestureRecognizer Command="{Binding CloseCommand}" Tapped="OnCloseTapped"/>
+            </Image.GestureRecognizers>
+        </Image>
+
+        <!-- Заголовок -->
+        <Label
+            Grid.Column="1"
+            HorizontalOptions="Center"
+            VerticalOptions="Center"
+            Text="Фильтры"
+            FontSize="18"
+            FontAttributes="Bold"
+            TextColor="{AppThemeBinding Light=Black, Dark=White}" />
+
+        <!-- Кнопка сброса -->
+        <Button
+            Grid.Column="2"
+            Text="Сбросить"
+            Command="{Binding ResetCommand}"
+            VerticalOptions="Center"
+            BackgroundColor="Transparent"
+            Padding="4"
+            TextColor="{AppThemeBinding Light=#666, Dark=#AAA}"
+            IsVisible="{Binding HasActiveFilters}" />
+    </Grid>
+</ContentView>

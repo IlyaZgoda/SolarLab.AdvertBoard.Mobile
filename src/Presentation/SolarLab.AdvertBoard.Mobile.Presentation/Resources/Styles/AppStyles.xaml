@@ -49,12 +49,24 @@
              Default="5">
         <OnIdiom.Desktop>15</OnIdiom.Desktop>
     </OnIdiom>
-    
+
+    <FontImageSource x:Key="CloseIcon"
+             Glyph="{x:Static f:FluentUI.arrow_left_24_regular}"
+             FontFamily="{x:Static f:FluentUI.FontFamily}"
+             Color="{AppThemeBinding Light={StaticResource DarkOnLightBackground}, Dark={StaticResource LightOnDarkBackground}}"
+             Size="{StaticResource IconSize}" />
+
     <FontImageSource x:Key="IconFilter"
                  Glyph="{x:Static f:FluentUI.filter_24_regular}"
                  FontFamily="{x:Static f:FluentUI.FontFamily}"
                  Color="{AppThemeBinding Light={StaticResource DarkOnLightBackground}, Dark={StaticResource LightOnDarkBackground}}"
                  Size="{StaticResource IconSize}" />
+
+    <FontImageSource x:Key="IconAppliedFilter"
+             Glyph="{x:Static f:FluentUI.filter_add_20_regular}"
+             FontFamily="{x:Static f:FluentUI.FontFamily}"
+             Color="{AppThemeBinding Light={StaticResource DarkOnLightBackground}, Dark={StaticResource LightOnDarkBackground}}"
+             Size="{StaticResource IconSize}" />
 
     <FontImageSource x:Key="IconSearch"
                  Glyph="{x:Static f:FluentUI.search_24_regular}"

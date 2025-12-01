@@ -37,4 +37,11 @@ public partial class MainPageHeaderView : ContentView
     {
         SearchEntry?.Unfocus();
     }
+
+    private void OnSearchCompleted(object sender, EventArgs e)
+    {
+        if (BindingContext is MainPageModel vm)
+            vm.RefreshCommand.Execute(null);
+    }
+
 }
