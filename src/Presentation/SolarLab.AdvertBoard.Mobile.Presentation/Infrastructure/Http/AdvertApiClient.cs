@@ -9,6 +9,17 @@ namespace SolarLab.AdvertBoard.Mobile.Presentation.Infrastructure.Http
     {
         private readonly HttpClient _httpClient = factory.CreateClient("BaseApi");
 
+        public async Task<PublishedAdvertDetailsResponse> GetAdvertDetailsAsync(Guid id)
+        {
+            var url = $"/api/adverts/{id}";
+
+            var response = await _httpClient.GetAsync(url);
+
+            response.EnsureSuccessStatusCode();
+
+            return await response.Content.ReadFromJsonAsync<PublishedAdvertDetailsResponse>();
+        }
+
         public async Task<PaginationCollection<PublishedAdvertItem>> GetPublishedAsync(AdvertFilterRequest filter)
         {
             var parameters = new Dictionary<string, string?>

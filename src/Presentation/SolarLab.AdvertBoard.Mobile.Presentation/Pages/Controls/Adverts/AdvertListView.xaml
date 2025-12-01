@@ -2,22 +2,28 @@
 <ContentView xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:pageModels="clr-namespace:SolarLab.AdvertBoard.Mobile.Presentation.PageModels"
              xmlns:adverts="clr-namespace:SolarLab.AdvertBoard.Mobile.Presentation.Pages.Controls.Adverts"
+             xmlns:contracts="clr-namespace:SolarLab.AdvertBoard.Mobile.Contracts.Adverts;assembly=SolarLab.AdvertBoard.Mobile.Contracts"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="SolarLab.AdvertBoard.Mobile.Presentation.Pages.Controls.Adverts.AdvertListView"
              x:DataType="pageModels:MainPageModel">
     
     <!--Row 2: Пагинированный список-->
     <CollectionView
-        ItemsSource="{Binding Adverts}"
-        RemainingItemsThreshold="5"
-        RemainingItemsThresholdReachedCommand="{Binding LoadNextPageCommand}"
-        SelectionMode="None"
-        ItemSizingStrategy="MeasureAllItems" Margin="0,12,0,0">
+    ItemsSource="{Binding Adverts}"
+    SelectionMode="Single"
+    SelectedItem="{Binding SelectedAdvert, Mode=TwoWay}"
+    RemainingItemsThreshold="5"
+    RemainingItemsThresholdReachedCommand="{Binding LoadNextPageCommand}"
+    ItemSizingStrategy="MeasureAllItems"
+    Margin="0,12,0,0">
 
         <CollectionView.ItemTemplate>
-            <DataTemplate>
+            <DataTemplate x:DataType="contracts:PublishedAdvertItem">
                 <adverts:AdvertListItemView />
             </DataTemplate>
         </CollectionView.ItemTemplate>
     </CollectionView>
+
+
+
 </ContentView>

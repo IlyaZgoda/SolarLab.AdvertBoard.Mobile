@@ -13,6 +13,8 @@ namespace SolarLab.AdvertBoard.Mobile.Presentation
             //ThemeSegmentedControl.SelectedIndex = currentTheme == AppTheme.Light ? 0 : 1;
 
             Routing.RegisterRoute("filters", typeof(FiltersPage));
+            Routing.RegisterRoute("advert-details", typeof(AdvertDetailsPage));
+
         }
         public static async Task DisplaySnackbarAsync(string message)
         {

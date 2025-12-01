@@ -134,18 +134,22 @@
 
                 <!--Row 2: Пагинированный список-->
                 <CollectionView Grid.Row="2"
-                    ItemsSource="{Binding Adverts}"
-                    RemainingItemsThreshold="5"
-                    RemainingItemsThresholdReachedCommand="{Binding LoadNextPageCommand}"
-                    SelectionMode="None"
-                    ItemSizingStrategy="MeasureAllItems" Margin="0,12,0,0">
-                    
+    ItemsSource="{Binding Adverts}"
+    RemainingItemsThreshold="5"
+    RemainingItemsThresholdReachedCommand="{Binding LoadNextPageCommand}"
+    SelectionMode="Single"  
+                    SelectedItem="{Binding SelectedAdvert, Mode=TwoWay}"
+    SelectionChangedCommand="{Binding AdvertSelectedCommand}"
+    SelectionChangedCommandParameter="{Binding .}"
+    ItemSizingStrategy="MeasureAllItems" Margin="0,12,0,0">
+
                     <CollectionView.ItemTemplate>
                         <DataTemplate>
                             <adverts:AdvertListItemView />
                         </DataTemplate>
                     </CollectionView.ItemTemplate>
                 </CollectionView>
+
             </Grid>
         </pullToRefresh:SfPullToRefresh.PullableContent>
     </pullToRefresh:SfPullToRefresh>

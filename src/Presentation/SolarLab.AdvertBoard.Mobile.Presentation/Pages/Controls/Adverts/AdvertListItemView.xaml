@@ -12,7 +12,10 @@
          Background="{AppThemeBinding Light=White, Dark=#1E1E1E}"
          Margin="0,0,0,12">
 
+
         <Grid RowDefinitions="Auto,Auto,Auto" ColumnDefinitions="*,Auto">
+
+            
             <Label Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2"
                 Text="{Binding Title}"
                 FontSize="18"

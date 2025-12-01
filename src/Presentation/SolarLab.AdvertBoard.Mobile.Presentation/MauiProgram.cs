@@ -73,6 +73,7 @@ namespace SolarLab.AdvertBoard.Mobile.Presentation
             builder.Services.AddSingleton<ModalErrorHandler>();
             builder.Services.AddSingleton<MainPageModel>();
             builder.Services.AddSingleton<FiltersPageModel>();
+            builder.Services.AddTransient<AdvertDetailsPageModel>();
             builder.Services.AddSingleton<ProjectListPageModel>();
             builder.Services.AddSingleton<ManageMetaPageModel>();
 
@@ -86,6 +87,7 @@ namespace SolarLab.AdvertBoard.Mobile.Presentation
 
             builder.Services.AddTransient<ICategoryApiClient, CategoryApiClient>();
             builder.Services.AddTransient<IAdvertApiClient, AdvertApiClient>();
+            builder.Services.AddTransient<IImageApiClient, ImageApiClient>();
             builder.Services.AddSingleton<ICategoryStore, CategoryStore>();
 
             return builder.Build();

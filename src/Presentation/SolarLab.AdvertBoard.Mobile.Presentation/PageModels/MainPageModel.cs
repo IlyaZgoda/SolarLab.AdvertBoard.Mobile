@@ -225,7 +225,24 @@ namespace SolarLab.AdvertBoard.Mobile.Presentation.PageModels
             SelectedCategory = null;
         }
 
+        [RelayCommand]
+        private async Task OpenAdvert(Guid advertId)
+        {
+            await Shell.Current.GoToAsync($"advert-details?AdvertId={advertId}");
+        }
 
+        [ObservableProperty]
+        private PublishedAdvertItem? selectedAdvert;
 
+        partial void OnSelectedAdvertChanged(PublishedAdvertItem? value)
+        {
+            if (value is null) return;
+
+            Debug.WriteLine($"Advert selected: {value.Id}");
+            _ = Shell.Current.GoToAsync($"advert-details?AdvertId={value.Id}");
+
+            // сброс, чтобы можно было выбрать тот же элемент снова
+            SelectedAdvert = null;
+        }
     }
 }
