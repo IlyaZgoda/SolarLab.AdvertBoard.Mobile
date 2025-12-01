@@ -1,5 +1,6 @@
 ﻿using Android.Content.Res;
 using CommunityToolkit.Maui;
+using FFImageLoading.Maui;
 using Microsoft.Extensions.Logging;
 using SolarLab.AdvertBoard.Mobile.Presentation.Infrastructure.Http;
 using Syncfusion.Maui.Toolkit.Hosting;
@@ -19,6 +20,7 @@ namespace SolarLab.AdvertBoard.Mobile.Presentation
 
             builder
                 .UseMauiApp<App>()
+                .UseFFImageLoading()
                 .UseMauiCommunityToolkit()
                 .ConfigureSyncfusionToolkit()
                 .ConfigureMauiHandlers(handlers =>

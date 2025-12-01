@@ -1,68 +1,52 @@
-<?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:pageModels="clr-namespace:SolarLab.AdvertBoard.Mobile.Presentation.PageModels"      
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             xmlns:pageModels="clr-namespace:SolarLab.AdvertBoard.Mobile.Presentation.PageModels"
              x:Class="SolarLab.AdvertBoard.Mobile.Presentation.Pages.AdvertDetailsPage"
-             x:DataType="pageModels:AdvertDetailsPageModel"
              Title="Объявление">
 
-    <ScrollView>
-        <VerticalStackLayout Padding="16" Spacing="16">
+    <CollectionView x:Name="MainCollectionView">
 
-            <!-- Заголовок -->
-            <Label Text="{Binding Advert.Title}"
-                   FontSize="22"
-                   FontAttributes="Bold" />
+        <!-- Верхняя часть страницы -->
+        <CollectionView.Header>
+            <VerticalStackLayout Padding="16" Spacing="16">
 
-            <!-- Карусель изображений -->
-            <CollectionView ItemsSource="{Binding AdvertImages}" HeightRequest="250">
-                <CollectionView.ItemsLayout>
-                    <LinearItemsLayout Orientation="Horizontal" ItemSpacing="8"/>
-                </CollectionView.ItemsLayout>
-                <CollectionView.ItemTemplate>
-                    <DataTemplate>
-                        <Frame HasShadow="True" CornerRadius="8" Padding="0">
-                            <Image Source="{Binding .}"
-                                   Aspect="AspectFill"
-                                   WidthRequest="250"
-                                   HeightRequest="250"/>
-                        </Frame>
-                    </DataTemplate>
-                </CollectionView.ItemTemplate>
-            </CollectionView>
+                <Label Text="{Binding Advert.Title}" FontSize="22" FontAttributes="Bold" />
 
-            <!-- Цена -->
-            <Label Text="{Binding Advert.Price, StringFormat='{0:C0}'}"
-                   FontSize="20"
-                   FontAttributes="Bold"
-                   TextColor="#008000"/>
+                <!-- Горизонтальная карусель -->
+                <CollectionView ItemsSource="{Binding AdvertImages}" HeightRequest="250" HorizontalScrollBarVisibility="Never">
+                    <CollectionView.ItemsLayout>
+                        <LinearItemsLayout Orientation="Horizontal" ItemSpacing="8"/>
+                    </CollectionView.ItemsLayout>
+                    <CollectionView.ItemTemplate>
+                        <DataTemplate>
+                            <Frame HasShadow="True" CornerRadius="8" Padding="0">
+                                <Image Source="{Binding .}" 
+                                       Aspect="AspectFill" 
+                                       WidthRequest="250" 
+                                       HeightRequest="250" 
+                                       BackgroundColor="LightGray"/>
+                            </Frame>
+                        </DataTemplate>
+                    </CollectionView.ItemTemplate>
+                </CollectionView>
 
-            <!-- Категория -->
-            <Label Text="{Binding Advert.CategoryTitle}"
-                   FontSize="14"
-                   TextColor="#777" />
+                <!-- Остальные элементы страницы -->
+                <Label Text="{Binding Advert.Price, StringFormat='{0:C0}'}" FontSize="20" FontAttributes="Bold" TextColor="#008000"/>
+                <Label Text="{Binding Advert.CategoryTitle}" FontSize="14" TextColor="#777"/>
+                <Label Text="{Binding Advert.Description}" FontSize="16" LineBreakMode="WordWrap"/>
 
-            <!-- Описание -->
-            <Label Text="{Binding Advert.Description}"
-                   FontSize="16"
-                   LineBreakMode="WordWrap" />
+                <VerticalStackLayout>
+                    <Label Text="Контакты продавца" FontSize="16" FontAttributes="Bold"/>
+                    <Label Text="{Binding Advert.AuthorContacts.FullName}" />
+                    <Label Text="{Binding Advert.AuthorContacts.ContactEmail}" />
+                    <Label Text="{Binding Advert.AuthorContacts.PhoneNumber}" />
+                </VerticalStackLayout>
 
-            <!-- Контакты автора -->
-            <VerticalStackLayout>
-                <Label Text="Контакты продавца"
-                       FontSize="16"
-                       FontAttributes="Bold"/>
-                <Label Text="{Binding Advert.AuthorContacts.FullName}" />
-                <Label Text="{Binding Advert.AuthorContacts.ContactEmail}" />
-                <Label Text="{Binding Advert.AuthorContacts.PhoneNumber}" />
+                <Label Text="{Binding Advert.CommentsCount, StringFormat='Комментариев: {0}'}" FontSize="14" TextColor="#777"/>
+
             </VerticalStackLayout>
+        </CollectionView.Header>
 
-            <!-- Комментарии -->
-            <Label Text="{Binding Advert.CommentsCount, StringFormat='Комментариев: {0}'}"
-                   FontSize="14"
-                   TextColor="#777"/>
-
-        </VerticalStackLayout>
-    </ScrollView>
+    </CollectionView>
 
 </ContentPage>

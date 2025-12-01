@@ -1,33 +1,32 @@
-﻿using Android.Graphics;
-using CommunityToolkit.Mvvm.ComponentModel;
-using SkiaSharp;
+﻿using CommunityToolkit.Mvvm.ComponentModel;
 using SolarLab.AdvertBoard.Mobile.Contracts.Adverts;
 using SolarLab.AdvertBoard.Mobile.Presentation.Infrastructure.Http;
 using System.Collections.ObjectModel;
-using System.Globalization;
 
 namespace SolarLab.AdvertBoard.Mobile.Presentation.PageModels
 {
-
     public partial class AdvertDetailsPageModel : ObservableObject, IQueryAttributable
     {
         private readonly IAdvertApiClient _advertClient;
-        private readonly IImageApiClient _imageClient;
 
-        public AdvertDetailsPageModel(IAdvertApiClient advertClient, IImageApiClient imageClient)
+        public AdvertDetailsPageModel(IAdvertApiClient advertClient)
         {
             _advertClient = advertClient;
-            _imageClient = imageClient;
+            AdvertImages = new ObservableCollection<ImageSource>();
         }
 
         [ObservableProperty]
         private PublishedAdvertDetailsResponse? advert;
 
+        [ObservableProperty]
+        private ObservableCollection<ImageSource> advertImages;
+
         public void ApplyQueryAttributes(IDictionary<string, object> query)
         {
-            if (query.TryGetValue("AdvertId", out var idObj) && idObj is string idStr && Guid.TryParse(idStr, out var id))
+            if (query.TryGetValue("AdvertId", out var idObj) &&
+                idObj is string idStr &&
+                Guid.TryParse(idStr, out var id))
             {
-                // Запускаем асинхронно, но без async void
                 _ = LoadAdvertAsync(id);
             }
         }
@@ -35,82 +34,39 @@ namespace SolarLab.AdvertBoard.Mobile.Presentation.PageModels
         private async Task LoadAdvertAsync(Guid id)
         {
             Advert = await _advertClient.GetAdvertDetailsAsync(id);
+
+            if (Advert != null)
+                await LoadImagesAsync();
         }
 
-        [ObservableProperty]
-        private ObservableCollection<ImageSource> advertImages = new();
-
-
-        private async Task LoadImagesAsync()
+        private Task LoadImagesAsync()
         {
+            AdvertImages.Clear();
 
             if (Advert?.ImageIds == null || Advert.ImageIds.Count == 0)
-            {
-                Console.WriteLine("Advert has no images.");
-                return;
-            }
-
-            Console.WriteLine($"Loading {Advert.ImageIds.Count} images...");
-
-            AdvertImages.Clear();
+                return Task.CompletedTask;
 
             foreach (var id in Advert.ImageIds)
             {
                 try
                 {
-                    Console.WriteLine($"Requesting image {id}...");
-                    var imgResponse = await _imageClient.GetImageAsync(id);
+                    // Формируем рабочий URL
+                    var url = $"http://10.0.2.2:8083/api/images/{id}/download";
 
-                    var info = SKBitmap.DecodeBounds(imgResponse.Content);
+                    // Создаем ImageSource из URL
+                    var imageSource = ImageSource.FromUri(new Uri(url));
+                    AdvertImages.Add(imageSource);
 
-                    System.Diagnostics.Debug.WriteLine($"IMAGE SIZE: {info.Width}x{info.Height}");
-                    if (imgResponse?.Content == null || imgResponse.Content.Length == 0)
-                    {
-                        Console.WriteLine($"Image {id} returned empty content.");
-                        continue;
-                    }
-
-                    Console.WriteLine($"Image {id} downloaded, {imgResponse.Content.Length} bytes. Adding to collection...");
-                    var bytes = imgResponse.Content;
-                    var header = BitConverter.ToString(bytes.Take(20).ToArray());
-                    System.Diagnostics.Debug.WriteLine($"IMAGE HEADER: {header}");
-
-                    var imageSource = ConvertToImageSource(imgResponse.Content);
-
-                    // Обновление коллекции на UI потоке
-                    MainThread.BeginInvokeOnMainThread(() =>
-                    {
-                        AdvertImages.Add(imageSource);
-                        Console.WriteLine($"Image {id} added to AdvertImages.");
-                    });
+                    Console.WriteLine($"Added image from URL: {url}");
                 }
                 catch (Exception ex)
                 {
-                    Console.WriteLine($"Error loading image {id}: {ex}");
+                    Console.WriteLine($"Failed to add image {id} from URL: {ex}");
                 }
             }
 
-            Console.WriteLine("Finished loading images.");
+            Console.WriteLine($"Total images added: {AdvertImages.Count}");
+            return Task.CompletedTask;
         }
-
-        private ImageSource ConvertToImageSource(byte[] bytes)
-        {
-            // Создаём копию массива для каждого запроса потока
-            return ImageSource.FromStream(() => new MemoryStream((byte[])bytes.Clone()));
-        }
-
-
-
-
-
-        partial void OnAdvertChanged(PublishedAdvertDetailsResponse? value)
-        {
-            if (value == null) return;
-            _ = LoadImagesAsync(); // подгружаем изображения после того, как объявление загружено
-        }
-
-
     }
-
-
 }
