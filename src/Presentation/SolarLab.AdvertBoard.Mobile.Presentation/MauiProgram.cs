@@ -90,6 +90,7 @@ namespace SolarLab.AdvertBoard.Mobile.Presentation
             builder.Services.AddTransient<ICategoryApiClient, CategoryApiClient>();
             builder.Services.AddTransient<IAdvertApiClient, AdvertApiClient>();
             builder.Services.AddTransient<IImageApiClient, ImageApiClient>();
+            builder.Services.AddTransient<ICommentsApiClient, CommentsApiClient>();
             builder.Services.AddSingleton<ICategoryStore, CategoryStore>();
 
             return builder.Build();

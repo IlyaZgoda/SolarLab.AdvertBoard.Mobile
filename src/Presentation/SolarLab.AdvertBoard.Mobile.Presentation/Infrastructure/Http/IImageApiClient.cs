@@ -1,4 +1,9 @@
-﻿using SolarLab.AdvertBoard.Mobile.Contracts.Images;
+﻿using Android.Widget;
+using Microsoft.AspNetCore.WebUtilities;
+using SolarLab.AdvertBoard.Mobile.Contracts.Adverts;
+using SolarLab.AdvertBoard.Mobile.Contracts.Base;
+using SolarLab.AdvertBoard.Mobile.Contracts.Comments;
+using SolarLab.AdvertBoard.Mobile.Contracts.Images;
 using System.Net.Http.Json;
 
 namespace SolarLab.AdvertBoard.Mobile.Presentation.Infrastructure.Http
@@ -8,25 +13,30 @@ namespace SolarLab.AdvertBoard.Mobile.Presentation.Infrastructure.Http
         Task<ImageResponse> GetImageAsync(Guid imageId);
     }
 
-    public class ImageApiClient(IHttpClientFactory factory) : IImageApiClient
+    public interface ICommentsApiClient
+    {
+        Task<PaginationCollection<CommentItem>> GetCommentsByAdvertIdAsync(Guid advertId, GetCommentsByAdvertIdRequest request);
+    }
+
+    public class CommentsApiClient(IHttpClientFactory factory) : ICommentsApiClient
     {
         private readonly HttpClient _httpClient = factory.CreateClient("BaseApi");
 
-        public async Task<ImageResponse> GetImageAsync(Guid imageId)
+        public async Task<PaginationCollection<CommentItem>> GetCommentsByAdvertIdAsync(Guid advertId, GetCommentsByAdvertIdRequest request)
         {
-            var url = $"api/images/{imageId}/download";
+            var parameters = new Dictionary<string, string?>
+            {
+                ["Page"] = request.Page.ToString(),
+                ["PageSize"] = request.PageSize.ToString(),
+            };
+
+            var url = QueryHelpers.AddQueryString($"/api/adverts/{advertId}/comments", parameters);
 
             var response = await _httpClient.GetAsync(url);
+
             response.EnsureSuccessStatusCode();
 
-            var contentBytes = await response.Content.ReadAsByteArrayAsync();
-
-            // Определяем MIME-тип и имя файла при необходимости
-            var contentType = response.Content.Headers.ContentType?.MediaType ?? "application/octet-stream";
-            var fileName = $"{imageId}.jpg"; // или получать из headers если сервер присылает Content-Disposition
-
-            return new ImageResponse(contentBytes, contentType, fileName);
+            return await response.Content.ReadFromJsonAsync<PaginationCollection<CommentItem>>();
         }
-
     }
 }

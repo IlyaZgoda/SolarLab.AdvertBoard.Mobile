@@ -6,7 +6,6 @@
 
     <CollectionView x:Name="MainCollectionView">
 
-        <!-- Верхняя часть страницы -->
         <CollectionView.Header>
             <VerticalStackLayout Padding="16" Spacing="16">
 
@@ -42,7 +41,42 @@
                     <Label Text="{Binding Advert.AuthorContacts.PhoneNumber}" />
                 </VerticalStackLayout>
 
-                <Label Text="{Binding Advert.CommentsCount, StringFormat='Комментариев: {0}'}" FontSize="14" TextColor="#777"/>
+                <Label Text="{Binding Advert.CommentsCount, StringFormat='Комментариев: {0}'}"
+                       FontSize="14" TextColor="#777"/>
+
+                <!-- Кнопка показать/скрыть (только если есть комментарии) -->
+                <Button Text="{Binding ToggleCommentsButtonText}"
+                        Command="{Binding ToggleCommentsCommand}"
+                        IsVisible="{Binding ShowToggleCommentsButton}" />
+
+                <!-- Контейнер для анимации комментариев -->
+                <Grid x:Name="CommentsContainer"
+                      IsVisible="{Binding CommentsVisible}"
+                      Opacity="0"
+                      ScaleY="0"
+                      AnchorY="0">
+                    <CollectionView ItemsSource="{Binding Comments}"
+                                    HeightRequest="300">
+                        <CollectionView.ItemTemplate>
+                            <DataTemplate>
+                                <Frame CornerRadius="8" Padding="8" Margin="0,4" BackgroundColor="#eee">
+                                    <VerticalStackLayout>
+                                        <Label Text="{Binding FullName}" FontAttributes="Bold"/>
+                                        <Label Text="{Binding Text}" LineBreakMode="WordWrap"/>
+                                        <Label Text="{Binding CreatedAt, StringFormat='{0:dd.MM.yyyy HH:mm}'}"
+                                               FontSize="12" TextColor="#666"/>
+                                    </VerticalStackLayout>
+                                </Frame>
+                            </DataTemplate>
+                        </CollectionView.ItemTemplate>
+                    </CollectionView>
+                </Grid>
+
+                <!-- Кнопка оставить комментарий -->
+                <Button Text="Добавить комментарий"
+                        IsEnabled="False"
+                        Margin="0,8,0,0"
+                        IsVisible="{Binding AddCommentVisible}" />
 
             </VerticalStackLayout>
         </CollectionView.Header>
