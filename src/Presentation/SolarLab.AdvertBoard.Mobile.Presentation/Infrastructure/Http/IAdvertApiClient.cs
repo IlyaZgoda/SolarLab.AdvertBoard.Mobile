@@ -8,5 +8,6 @@ namespace SolarLab.AdvertBoard.Mobile.Presentation.Infrastructure.Http
     {
         Task<PaginationCollection<PublishedAdvertItem>> GetPublishedAsync(AdvertFilterRequest filter);
         Task<PublishedAdvertDetailsResponse> GetAdvertDetailsAsync(Guid id);
+        Task<PaginationCollection<PublishedAdvertItem>> GetUserPublishedAdvertsAsync(GetUserPublishedAdvertsRequest request, string jwt);
     }
 }

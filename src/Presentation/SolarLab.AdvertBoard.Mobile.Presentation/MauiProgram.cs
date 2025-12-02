@@ -82,6 +82,7 @@ namespace SolarLab.AdvertBoard.Mobile.Presentation
             builder.Services.AddTransient<RegisterPageModel>();
             builder.Services.AddTransient<ProfilePageModel>();
             builder.Services.AddTransient<EditProfilePageModel>();
+            builder.Services.AddTransient<PublishedUserAdvertsPageModel>();
             builder.Services.AddSingleton<ProjectListPageModel>();
             builder.Services.AddSingleton<ManageMetaPageModel>();
 

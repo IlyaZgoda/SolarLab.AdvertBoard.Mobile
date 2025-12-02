@@ -48,8 +48,8 @@
                        TextColor="{AppThemeBinding Light={StaticResource DarkOnLightBackground}, Dark={StaticResource LightOnDarkBackground}}"/>
             </sf:SfTextInputLayout>
 
-            <!-- Основная почта -->
-            <sf:SfTextInputLayout Hint="Электронная почта"
+            <!-- Контактная почта -->
+            <sf:SfTextInputLayout Hint="Контактная почта"
                                   IsHintAlwaysFloated="True"
                                   ContainerType="Outlined"
                                   Stroke="{AppThemeBinding Light={StaticResource Primary}, Dark={StaticResource Primary}}"
@@ -61,18 +61,6 @@
                        TextColor="{AppThemeBinding Light={StaticResource DarkOnLightBackground}, Dark={StaticResource LightOnDarkBackground}}"/>
             </sf:SfTextInputLayout>
 
-            <!-- Контактная почта -->
-            <sf:SfTextInputLayout Hint="Контактная почта"
-                                  IsHintAlwaysFloated="True"
-                                  ContainerType="Outlined"
-                                  Stroke="{AppThemeBinding Light={StaticResource Primary}, Dark={StaticResource Primary}}"
-                                  HintLabelStyle="{AppThemeBinding Light={StaticResource Body1}, Dark={StaticResource Body1}}"
-                                  OutlineCornerRadius="12"
-                                  Margin="0,0,0,10">
-                <Entry Text="{Binding SecondaryEmail, Mode=TwoWay}"
-                       Keyboard="Email"
-                       TextColor="{AppThemeBinding Light={StaticResource DarkOnLightBackground}, Dark={StaticResource LightOnDarkBackground}}"/>
-            </sf:SfTextInputLayout>
 
             <!-- Телефон -->
             <sf:SfTextInputLayout Hint="Телефон"

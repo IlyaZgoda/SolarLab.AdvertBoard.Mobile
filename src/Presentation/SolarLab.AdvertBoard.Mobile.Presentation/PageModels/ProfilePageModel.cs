@@ -10,6 +10,11 @@ namespace SolarLab.AdvertBoard.Mobile.Presentation.PageModels
 {
     public partial class ProfilePageModel : ObservableObject
     {
+        public ICommand ShowPublishedCommand { get; }
+
+
+
+
         // Профильные свойства
         [ObservableProperty]
         private string _firstName;
@@ -76,6 +81,9 @@ namespace SolarLab.AdvertBoard.Mobile.Presentation.PageModels
                        ? 1 : 0;
 
             EditProfileCommand = new AsyncRelayCommand(OnEditProfileAsync);
+
+            ShowPublishedCommand = new AsyncRelayCommand(OnShowPublishedAsync);
+
             _ = LoadProfileAsync();
         }
 
@@ -93,6 +101,11 @@ namespace SolarLab.AdvertBoard.Mobile.Presentation.PageModels
             await Shell.Current.GoToAsync("edit-profile", query);
         }
 
+
+        private async Task OnShowPublishedAsync()
+        {
+            await Shell.Current.GoToAsync("published-user-adverts");
+        }
 
         private async Task LoadProfileAsync()
         {
