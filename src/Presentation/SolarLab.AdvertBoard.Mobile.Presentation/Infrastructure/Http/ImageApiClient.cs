@@ -1,4 +1,5 @@
-﻿using SolarLab.AdvertBoard.Mobile.Contracts.Images;
+﻿using SolarLab.AdvertBoard.Mobile.Contracts.Adverts;
+using SolarLab.AdvertBoard.Mobile.Contracts.Images;
 using System.Net.Http.Headers;
 using System.Net.Http.Json;
 
@@ -7,6 +8,18 @@ namespace SolarLab.AdvertBoard.Mobile.Presentation.Infrastructure.Http
     public class ImageApiClient(IHttpClientFactory factory) : IImageApiClient
     {
         private readonly HttpClient _httpClient = factory.CreateClient("BaseApi");
+
+        public async Task DeleteDraftImageAsync(Guid advertId, Guid imageId, string jwt)
+        {
+            _httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", jwt);
+            var url = $"api/adverts/drafts/{advertId}/images/{imageId}";
+
+            var result = await _httpClient.DeleteAsync(url);
+
+            result.EnsureSuccessStatusCode();
+
+            return;
+        }
 
         public async Task<ImageResponse> GetImageAsync(Guid imageId)
         {

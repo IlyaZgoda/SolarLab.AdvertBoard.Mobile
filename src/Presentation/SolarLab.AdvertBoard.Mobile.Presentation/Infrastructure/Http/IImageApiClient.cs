@@ -1,4 +1,5 @@
-﻿using SolarLab.AdvertBoard.Mobile.Contracts.Authentication;
+﻿using SolarLab.AdvertBoard.Mobile.Contracts.Adverts;
+using SolarLab.AdvertBoard.Mobile.Contracts.Authentication;
 using SolarLab.AdvertBoard.Mobile.Contracts.Images;
 using SolarLab.AdvertBoard.Mobile.Contracts.Users;
 using System.ComponentModel;
@@ -12,6 +13,7 @@ namespace SolarLab.AdvertBoard.Mobile.Presentation.Infrastructure.Http
         Task<ImageResponse> GetImageAsync(Guid imageId);
         Task<string> GetUrlForDraftImage(Guid imageId, string jwt);
         Task<ImageIdResponse> UploadDraftImageAsync(Guid advertId, Stream imageStream, string jwt);
+        Task DeleteDraftImageAsync(Guid advertId, Guid imageId, string jwt); 
     }
 
     public interface IUsersApiClient

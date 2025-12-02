@@ -2,6 +2,7 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:pageModels="clr-namespace:SolarLab.AdvertBoard.Mobile.Presentation.PageModels"
              x:Class="SolarLab.AdvertBoard.Mobile.Presentation.Pages.UserDraftDetailsPage"
+             x:Name="RootPage"
              Title="Черновик">
 
     <ContentPage.Resources>
@@ -12,57 +13,124 @@
     </ContentPage.Resources>
 
     <ScrollView>
-        <VerticalStackLayout Padding="16" Spacing="16">
+        <VerticalStackLayout Padding="16" Spacing="24">
 
-            <!-- Заголовок -->
-            <Label Text="Заголовок" FontSize="12" TextColor="#555"/>
-            <Entry Text="{Binding Advert.Title}" Placeholder="Введите заголовок"
-                   FontSize="20" FontAttributes="Bold"
-                   BackgroundColor="{AppThemeBinding Light=#f0f0f0, Dark=#2c2c2c}"/>
+            <!-- ========================= -->
+            <!-- БЛОК ФОТО -->
+            <!-- ========================= -->
+            <VerticalStackLayout Spacing="12">
 
-            <!-- Фото -->
-            <StackLayout>
-                <CollectionView ItemsSource="{Binding AdvertImages}" HeightRequest="250" HorizontalScrollBarVisibility="Never"
-                                IsVisible="{Binding AdvertImages.Count, Converter={StaticResource GreaterThanZeroConverter}}">
-                    <CollectionView.ItemsLayout>
-                        <LinearItemsLayout Orientation="Horizontal" ItemSpacing="8"/>
-                    </CollectionView.ItemsLayout>
-                    <CollectionView.ItemTemplate>
-                        <DataTemplate>
-                            <Frame HasShadow="True" CornerRadius="8" Padding="0">
-                                <Image Source="{Binding .}" Aspect="AspectFill" WidthRequest="250" HeightRequest="250"/>
-                            </Frame>
-                        </DataTemplate>
-                    </CollectionView.ItemTemplate>
-                </CollectionView>
+                <Label Text="Фотографии" FontSize="18" FontAttributes="Bold" />
 
-                <Label Text="Фотографий пока нет" HorizontalOptions="Center" FontAttributes="Italic"
-                       IsVisible="{Binding AdvertImages.Count, Converter={StaticResource EqualsZeroConverter}}"/>
-            </StackLayout>
+                <StackLayout>
+                    <CollectionView ItemsSource="{Binding AdvertImages}"
+                                    HeightRequest="250"
+                                    HorizontalScrollBarVisibility="Never"
+                                    IsVisible="{Binding AdvertImages.Count, Converter={StaticResource GreaterThanZeroConverter}}">
+                        <CollectionView.ItemsLayout>
+                            <LinearItemsLayout Orientation="Horizontal" ItemSpacing="8" />
+                        </CollectionView.ItemsLayout>
 
-            <!-- Кнопка добавить фото -->
-            <Button Text="Добавить фото" Command="{Binding AddPhotoCommand}" HorizontalOptions="Center"/>
+                        <CollectionView.ItemTemplate>
+                            <DataTemplate>
+                                <Grid WidthRequest="250" HeightRequest="250">
 
-            <!-- Цена -->
-            <Label Text="Цена" FontSize="12" TextColor="#555"/>
-            <Entry Text="{Binding Advert.Price}" Placeholder="Введите цену" Keyboard="Numeric" FontSize="18"
-                   BackgroundColor="{AppThemeBinding Light=#f0f0f0, Dark=#2c2c2c}"/>
+                                    <!-- Фото -->
+                                    <Image Source="{Binding ImageSource}"
+                                           Aspect="AspectFill" />
 
-            <!-- Категория -->
-            <Label Text="Категория" FontSize="12" TextColor="#555"/>
-            <Entry Text="{Binding Advert.CategoryTitle}" Placeholder="Выберите категорию"
-                   FontSize="18" BackgroundColor="{AppThemeBinding Light=#f0f0f0, Dark=#2c2c2c}"/>
+                                    <!-- Крестик удаления -->
+                                    <Image Source="{StaticResource IconDelete}"
+                                           WidthRequest="28"
+                                           HeightRequest="28"
+                                           HorizontalOptions="End"
+                                           VerticalOptions="Start"
+                                           Margin="6"
+                                           BackgroundColor="Transparent"   
+                                           Padding="4">
+                                        <Image.GestureRecognizers>
+                                            <TapGestureRecognizer
+                                                Command="{Binding BindingContext.DeletePhotoCommand, Source={x:Reference RootPage}}"
+                                                CommandParameter="{Binding Id}" />
+                                        </Image.GestureRecognizers>
+                                    </Image>
 
-            <!-- Описание -->
-            <Label Text="Описание" FontSize="12" TextColor="#555"/>
-            <Editor Text="{Binding Advert.Description}" Placeholder="Введите описание"
-                    FontSize="16" HeightRequest="120"
-                    BackgroundColor="{AppThemeBinding Light=#f0f0f0, Dark=#2c2c2c}"/>
+                                </Grid>
+                            </DataTemplate>
+                        </CollectionView.ItemTemplate>
+                    </CollectionView>
 
-            <!-- Дата -->
-            <Label Text="{Binding Advert.CreatedAt, StringFormat='Создано: {0:dd.MM.yyyy HH:mm}'}" FontSize="12" TextColor="#555"/>
-            <Label Text="{Binding Advert.UpdatedAt, StringFormat='Обновлено: {0:dd.MM.yyyy HH:mm}'}" FontSize="12" TextColor="#555"
-                   IsVisible="{Binding Advert.UpdatedAt, Converter={StaticResource NotNullToBoolConverter}}"/>
+                    <Label Text="Фотографий пока нет"
+                           HorizontalOptions="Center"
+                           FontAttributes="Italic"
+                           IsVisible="{Binding AdvertImages.Count, Converter={StaticResource EqualsZeroConverter}}" />
+                </StackLayout>
+
+                <Button Text="Добавить фото"
+                        Command="{Binding AddPhotoCommand}"
+                        HorizontalOptions="Center" />
+
+            </VerticalStackLayout>
+
+            <!-- ========================= -->
+            <!-- БЛОК РЕДАКТИРОВАНИЯ -->
+            <!-- ========================= -->
+            <VerticalStackLayout Spacing="16">
+
+                <Label Text="Редактировать"
+                       FontSize="18"
+                       FontAttributes="Bold"
+                       Margin="0,20,0,0"/>
+
+                <Label Text="Заголовок" FontSize="12" TextColor="#555" />
+                <Entry Text="{Binding Advert.Title}"
+                       Placeholder="Введите заголовок"
+                       FontSize="20"
+                       FontAttributes="Bold"
+                       BackgroundColor="{AppThemeBinding Light=#f0f0f0, Dark=#2c2c2c}" />
+
+                <Label Text="Цена" FontSize="12" TextColor="#555" />
+                <Entry Text="{Binding Advert.Price}"
+                       Placeholder="Введите цену"
+                       Keyboard="Numeric"
+                       FontSize="18"
+                       BackgroundColor="{AppThemeBinding Light=#f0f0f0, Dark=#2c2c2c}" />
+
+                <Label Text="Категория" FontSize="12" TextColor="#555" />
+                <Entry Text="{Binding Advert.CategoryTitle}"
+                       Placeholder="Выберите категорию"
+                       FontSize="18"
+                       BackgroundColor="{AppThemeBinding Light=#f0f0f0, Dark=#2c2c2c}" />
+
+                <Label Text="Описание" FontSize="12" TextColor="#555" />
+                <Editor Text="{Binding Advert.Description}"
+                        Placeholder="Введите описание"
+                        FontSize="16"
+                        HeightRequest="120"
+                        BackgroundColor="{AppThemeBinding Light=#f0f0f0, Dark=#2c2c2c}" />
+
+            </VerticalStackLayout>
+
+            <!-- ========================= -->
+            <!-- ДАТЫ -->
+            <!-- ========================= -->
+            <VerticalStackLayout Spacing="4">
+                <Label Text="{Binding Advert.CreatedAt, StringFormat='Создано: {0:dd.MM.yyyy HH:mm}'}"
+                       FontSize="12"
+                       TextColor="#555" />
+
+                <Label Text="{Binding Advert.UpdatedAt, StringFormat='Обновлено: {0:dd.MM.yyyy HH:mm}'}"
+                       FontSize="12"
+                       TextColor="#555"
+                       IsVisible="{Binding Advert.UpdatedAt, Converter={StaticResource NotNullToBoolConverter}}" />
+            </VerticalStackLayout>
+
+            <Button Text="Сохранить"
+        Command="{Binding SaveDraftCommand}"
+        Style="{StaticResource PrimaryButton}"
+        HorizontalOptions="Fill" />
+
+
         </VerticalStackLayout>
     </ScrollView>
 </ContentPage>

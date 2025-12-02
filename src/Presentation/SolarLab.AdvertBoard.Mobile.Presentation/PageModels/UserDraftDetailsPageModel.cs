@@ -6,41 +6,46 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Globalization;
-using System.Text;
+using System.IO;
+using System.Net.Http;
+using System.Text.Json;
+using System.Threading.Tasks;
 
 namespace SolarLab.AdvertBoard.Mobile.Presentation.PageModels
 {
+    // ============================
+    // Конвертеры
+    // ============================
     public class EqualsZeroConverter : IValueConverter
     {
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
-        {
-            if (value is int count)
-                return count == 0;
-            return false;
-        }
+            => value is int count && count == 0;
 
         public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
-        {
-            throw new NotImplementedException();
-        }
-
+            => throw new NotImplementedException();
     }
 
     public class GreaterThanZeroConverter : IValueConverter
     {
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
-        {
-            if (value is int count)
-                return count > 0;
-            return false;
-        }
+            => value is int count && count > 0;
 
         public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
-        {
-            throw new NotImplementedException();
-        }
+            => throw new NotImplementedException();
     }
 
+    // ============================
+    // Модель фото
+    // ============================
+    public class PhotoViewModel
+    {
+        public Guid Id { get; set; }
+        public ImageSource ImageSource { get; set; } = default!;
+    }
+
+    // ============================
+    // Основная PageModel
+    // ============================
     public partial class UserDraftDetailsPageModel : ObservableObject, IQueryAttributable
     {
         private readonly IAdvertApiClient _client;
@@ -53,15 +58,18 @@ namespace SolarLab.AdvertBoard.Mobile.Presentation.PageModels
             _auth = auth;
             _imageClient = imageClient;
 
-            AdvertImages = new ObservableCollection<ImageSource>();
+            AdvertImages = new ObservableCollection<PhotoViewModel>();
         }
 
         [ObservableProperty]
         private AdvertDraftDetailsResponse? _advert;
 
         [ObservableProperty]
-        private ObservableCollection<ImageSource> _advertImages;
+        private ObservableCollection<PhotoViewModel> _advertImages;
 
+        // ============================
+        // Навигация
+        // ============================
         public void ApplyQueryAttributes(IDictionary<string, object> query)
         {
             if (query.TryGetValue("AdvertId", out var idObj) && Guid.TryParse(idObj?.ToString(), out var advertId))
@@ -70,6 +78,9 @@ namespace SolarLab.AdvertBoard.Mobile.Presentation.PageModels
             }
         }
 
+        // ============================
+        // Загрузка черновика
+        // ============================
         private async Task LoadDraftDetailsAsync(Guid advertId)
         {
             try
@@ -79,10 +90,13 @@ namespace SolarLab.AdvertBoard.Mobile.Presentation.PageModels
             }
             catch (Exception ex)
             {
-                System.Diagnostics.Debug.WriteLine($"Ошибка загрузки черновика: {ex}");
+                System.Diagnostics.Debug.WriteLine($"Ошибка загрузки: {ex}");
             }
         }
 
+        // ============================
+        // Загрузка изображений
+        // ============================
         private async Task LoadImagesAsync()
         {
             AdvertImages.Clear();
@@ -101,9 +115,12 @@ namespace SolarLab.AdvertBoard.Mobile.Presentation.PageModels
                     var url = $"http://10.0.2.2:8083/api/images/{id}/download";
                     var bytes = await client.GetByteArrayAsync(url);
 
-                    // Создаём ImageSource из byte[]
-                    var stream = new MemoryStream(bytes);
-                    AdvertImages.Add(ImageSource.FromStream(() => stream));
+                    var mem = new MemoryStream(bytes);
+                    AdvertImages.Add(new PhotoViewModel
+                    {
+                        Id = id,
+                        ImageSource = ImageSource.FromStream(() => mem)
+                    });
                 }
                 catch (Exception ex)
                 {
@@ -112,6 +129,9 @@ namespace SolarLab.AdvertBoard.Mobile.Presentation.PageModels
             }
         }
 
+        // ============================
+        // Добавление фото
+        // ============================
         [RelayCommand]
         private async Task AddPhotoAsync()
         {
@@ -130,34 +150,92 @@ namespace SolarLab.AdvertBoard.Mobile.Presentation.PageModels
                     return;
 
                 await using var stream = await pick.OpenReadAsync();
-
                 var upload = await _imageClient.UploadDraftImageAsync(Advert.Id, stream, _auth.Jwt!);
 
                 if (upload == null || upload.Id == Guid.Empty)
                 {
-                    await Application.Current.MainPage.DisplayAlert("Ошибка", "Сервер не вернул ID изображения.", "ОК");
+                    await Application.Current.MainPage.DisplayAlert("Ошибка", "Сервер не вернул ID изображения", "OK");
                     return;
                 }
 
-                // ⛔ НЕ трогаем Advert.ImageIds — оно init-only!
-
-                // ✔ Загружаем обновлённый черновик
                 Advert = await _client.GetDraftDetailsAsync(Advert.Id, _auth.Jwt!);
-
-                // ✔ Загружаем изображения
                 await LoadImagesAsync();
             }
             catch (Exception ex)
             {
-                System.Diagnostics.Debug.WriteLine($"Ошибка добавления фото: {ex}");
+                System.Diagnostics.Debug.WriteLine($"Ошибка добавления: {ex}");
                 await Application.Current.MainPage.DisplayAlert("Ошибка", ex.Message, "OK");
             }
         }
 
+        // ============================
+        // Удаление фото
+        // ============================
+        [RelayCommand]
+        private async Task DeletePhotoAsync(Guid imageId)
+        {
+            if (Advert == null)
+                return;
 
+            var confirm = await Application.Current.MainPage.DisplayAlert(
+                "Удалить фото?",
+                "Действие нельзя отменить.",
+                "Удалить", "Отмена");
 
+            if (!confirm)
+                return;
 
+            try
+            {
+                await _imageClient.DeleteDraftImageAsync(Advert.Id, imageId, _auth.Jwt!);
 
+                Advert = await _client.GetDraftDetailsAsync(Advert.Id, _auth.Jwt!);
+                await LoadImagesAsync();
+            }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Debug.WriteLine($"Ошибка удаления: {ex}");
+                await Application.Current.MainPage.DisplayAlert("Ошибка", ex.Message, "OK");
+            }
+        }
+
+        // ============================
+        // Сохранение черновика
+        // ============================
+        [RelayCommand]
+        private async Task SaveDraftAsync()
+        {
+            if (Advert == null)
+                return;
+
+            try
+            {
+                var request = new UpdateAdvertDraftRequest(
+                    CategoryId: Advert.CategoryId,
+                    Title: string.IsNullOrWhiteSpace(Advert.Title) ? null : Advert.Title,
+                    Description: string.IsNullOrWhiteSpace(Advert.Description) ? null : Advert.Description,
+                    Price: Advert.Price
+                );
+
+                // Логируем JSON перед отправкой
+                var json = JsonSerializer.Serialize(request);
+                System.Diagnostics.Debug.WriteLine($"PATCH /draft request JSON: {json}");
+
+                await _client.UpdateDraftAsync(Advert.Id, request, _auth.Jwt!);
+
+                // Обновляем локально
+                Advert = await _client.GetDraftDetailsAsync(Advert.Id, _auth.Jwt!);
+
+                await Application.Current.MainPage.DisplayAlert("Успех", "Черновик сохранён", "OK");
+            }
+            catch (HttpRequestException ex)
+            {
+                await Application.Current.MainPage.DisplayAlert("Ошибка сервера", ex.Message, "OK");
+            }
+            catch (Exception ex)
+            {
+                await Application.Current.MainPage.DisplayAlert("Ошибка", ex.Message, "OK");
+            }
+        }
     }
 }
-

@@ -1,7 +1,9 @@
 ﻿using Microsoft.AspNetCore.WebUtilities;
 using SolarLab.AdvertBoard.Mobile.Contracts.Adverts;
 using SolarLab.AdvertBoard.Mobile.Contracts.Base;
+using System.Net.Http.Headers;
 using System.Net.Http.Json;
+using System.Text.Json;
 
 namespace SolarLab.AdvertBoard.Mobile.Presentation.Infrastructure.Http
 {
@@ -50,7 +52,7 @@ namespace SolarLab.AdvertBoard.Mobile.Presentation.Infrastructure.Http
 
             var url = QueryHelpers.AddQueryString("/api/adverts", parameters);
 
-            var response = await _httpClient.GetAsync(url);  
+            var response = await _httpClient.GetAsync(url);
 
             response.EnsureSuccessStatusCode();
 
@@ -97,5 +99,62 @@ namespace SolarLab.AdvertBoard.Mobile.Presentation.Infrastructure.Http
 
             return await response.Content.ReadFromJsonAsync<PaginationCollection<PublishedAdvertItem>>();
         }
+
+        public async Task UpdateDraftAsync(Guid advertId, UpdateAdvertDraftRequest request, string jwt)
+        {
+            // Новый маршрут POST для обхода проблем PATCH
+            var url = $"/drafts/{advertId}/update";
+
+            try
+            {
+                // Сериализация JSON с camelCase, все поля включены
+                var json = JsonSerializer.Serialize(request, new JsonSerializerOptions
+                {
+                    PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
+                    DefaultIgnoreCondition = System.Text.Json.Serialization.JsonIgnoreCondition.Never,
+                    WriteIndented = false
+                });
+
+                // Логируем JSON
+                System.Diagnostics.Debug.WriteLine($"POST /draft/update request JSON: {json}");
+
+                using var content = new StringContent(json, System.Text.Encoding.UTF8, "application/json");
+
+                // Устанавливаем заголовок авторизации
+                _httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", jwt);
+
+                // Отправляем POST-запрос
+                var response = await _httpClient.PostAsync(url, content);
+
+                if (response.IsSuccessStatusCode)
+                {
+                    System.Diagnostics.Debug.WriteLine($"POST /draft/update succeeded for advert {advertId}");
+                    return;
+                }
+                else
+                {
+                    // Попытка десериализовать ProblemDetails, если есть
+                    ProblemDetails? problem = null;
+                    try
+                    {
+                        problem = await response.Content.ReadFromJsonAsync<ProblemDetails>();
+                    }
+                    catch { }
+
+                    var messageText = problem?.Detail ?? $"Ошибка сервера: {response.StatusCode}";
+                    System.Diagnostics.Debug.WriteLine($"POST /draft/update failed: {messageText}");
+                    throw new InvalidOperationException(messageText);
+                }
+            }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Debug.WriteLine($"Exception in UpdateDraftAsync: {ex}");
+                throw;
+            }
+        }
+
+
+
+
     }
 }

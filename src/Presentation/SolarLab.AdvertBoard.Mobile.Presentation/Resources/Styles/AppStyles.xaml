@@ -393,5 +393,10 @@
 
 
 
+    <FontImageSource x:Key="IconDeleteRed"
+    Glyph="{x:Static f:FluentUI.delete_32_regular}"
+    FontFamily="{x:Static f:FluentUI.FontFamily}"
+    Color="Red"
+    Size="{StaticResource IconSize}" />
 
 </ResourceDictionary>
