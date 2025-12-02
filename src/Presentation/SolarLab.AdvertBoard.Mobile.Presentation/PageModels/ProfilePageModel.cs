@@ -11,6 +11,7 @@ namespace SolarLab.AdvertBoard.Mobile.Presentation.PageModels
     public partial class ProfilePageModel : ObservableObject
     {
         public ICommand ShowPublishedCommand { get; }
+        public ICommand ShowDraftsCommand { get; }
 
 
 
@@ -83,6 +84,7 @@ namespace SolarLab.AdvertBoard.Mobile.Presentation.PageModels
             EditProfileCommand = new AsyncRelayCommand(OnEditProfileAsync);
 
             ShowPublishedCommand = new AsyncRelayCommand(OnShowPublishedAsync);
+            ShowDraftsCommand = new AsyncRelayCommand(OnShowDraftsAsync);
 
             _ = LoadProfileAsync();
         }
@@ -105,6 +107,11 @@ namespace SolarLab.AdvertBoard.Mobile.Presentation.PageModels
         private async Task OnShowPublishedAsync()
         {
             await Shell.Current.GoToAsync("published-user-adverts");
+        }
+
+        private async Task OnShowDraftsAsync()
+        {
+            await Shell.Current.GoToAsync("user-drafts");
         }
 
         private async Task LoadProfileAsync()

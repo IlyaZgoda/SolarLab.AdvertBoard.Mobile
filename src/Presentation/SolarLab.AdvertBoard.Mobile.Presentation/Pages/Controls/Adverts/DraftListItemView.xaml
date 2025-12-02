@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentView xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:contracts="clr-namespace:SolarLab.AdvertBoard.Mobile.Contracts.Adverts;assembly=SolarLab.AdvertBoard.Mobile.Contracts"
+             x:Class="SolarLab.AdvertBoard.Mobile.Presentation.Pages.Controls.Adverts.DraftListItemView"
+             x:DataType="contracts:AdvertDraftItem">
+
+    <Border Padding="12" StrokeThickness="0" StrokeShape="RoundRectangle 12"
+            Background="{AppThemeBinding Light=White, Dark=#1E1E1E}" Margin="0,0,0,12">
+
+        <Grid RowDefinitions="Auto,Auto,Auto" ColumnDefinitions="*,Auto">
+            <!-- Заголовок -->
+            <Label Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2"
+                   Text="{Binding Title}" FontSize="18" FontAttributes="Bold"
+                   TextColor="{AppThemeBinding Light=Black, Dark=White}" />
+
+            <!-- Описание -->
+            <Label Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2"
+                   Text="{Binding Description}" FontSize="14"
+                   LineBreakMode="TailTruncation" MaxLines="3"
+                   TextColor="{AppThemeBinding Light=Gray, Dark=#CCCCCC}"
+                   Margin="0,6,0,0" />
+
+            <!-- Цена + категория -->
+            <HorizontalStackLayout Grid.Row="2" Grid.Column="0" Spacing="12" VerticalOptions="Center" Margin="0,6,0,0">
+                <Label Text="{Binding Price, StringFormat='{0:C0}'}"
+                       FontAttributes="Bold" FontSize="14"
+                       TextColor="{AppThemeBinding Light=Black, Dark=White}" WidthRequest="100"/>
+                <Label Text="{Binding CategoryTitle}" FontSize="14"
+                       TextColor="{AppThemeBinding Light=#666, Dark=#AAAAAA}" />
+            </HorizontalStackLayout>
+
+            <!-- Дата создания справа -->
+            <Label Grid.Row="2" Grid.Column="1"
+                   Text="{Binding CreatedAt, StringFormat='{0:M}'}"
+                   FontSize="12" VerticalOptions="End" HorizontalOptions="End"
+                   TextColor="{AppThemeBinding Light=#999, Dark=#888}" />
+        </Grid>
+    </Border>
+</ContentView>

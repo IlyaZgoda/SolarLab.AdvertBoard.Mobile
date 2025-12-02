@@ -20,6 +20,20 @@ namespace SolarLab.AdvertBoard.Mobile.Presentation.Infrastructure.Http
             return await response.Content.ReadFromJsonAsync<PublishedAdvertDetailsResponse>();
         }
 
+        public async Task<AdvertDraftDetailsResponse> GetDraftDetailsAsync(Guid id, string jwt)
+        {
+            _httpClient.DefaultRequestHeaders.Authorization =
+                new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", jwt);
+
+            var url = $"/api/adverts/drafts/{id}";
+
+            var response = await _httpClient.GetAsync(url);
+
+            response.EnsureSuccessStatusCode();
+
+            return await response.Content.ReadFromJsonAsync<AdvertDraftDetailsResponse>();
+        }
+
         public async Task<PaginationCollection<PublishedAdvertItem>> GetPublishedAsync(AdvertFilterRequest filter)
         {
             var parameters = new Dictionary<string, string?>
@@ -41,6 +55,26 @@ namespace SolarLab.AdvertBoard.Mobile.Presentation.Infrastructure.Http
             response.EnsureSuccessStatusCode();
 
             return await response.Content.ReadFromJsonAsync<PaginationCollection<PublishedAdvertItem>>();
+        }
+
+        public async Task<PaginationCollection<AdvertDraftItem>> GetUserDraftsAsync(GetUserAdvertDraftsRequest request, string jwt)
+        {
+            _httpClient.DefaultRequestHeaders.Authorization =
+                new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", jwt);
+
+            var parameters = new Dictionary<string, string?>
+            {
+                ["Page"] = request.Page.ToString(),
+                ["PageSize"] = request.PageSize.ToString(),
+            };
+
+            var url = QueryHelpers.AddQueryString("/api/adverts/my/drafts", parameters);
+
+            var response = await _httpClient.GetAsync(url);
+
+            response.EnsureSuccessStatusCode();
+
+            return await response.Content.ReadFromJsonAsync<PaginationCollection<AdvertDraftItem>>();
         }
 
         public async Task<PaginationCollection<PublishedAdvertItem>> GetUserPublishedAdvertsAsync(

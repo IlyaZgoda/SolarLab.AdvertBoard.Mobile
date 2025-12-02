@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:pageModels="clr-namespace:SolarLab.AdvertBoard.Mobile.Presentation.PageModels"
+             x:Class="SolarLab.AdvertBoard.Mobile.Presentation.Pages.UserDraftDetailsPage"
+             x:DataType="pageModels:UserDraftDetailsPageModel"
+             Title="Черновик">
+
+    <ScrollView>
+        <VerticalStackLayout Padding="16" Spacing="16">
+
+            <!-- Заголовок -->
+            <Label Text="{Binding Advert.Title}" FontSize="22" FontAttributes="Bold" />
+
+            <!-- Карусель изображений -->
+            <CollectionView ItemsSource="{Binding AdvertImages}" HeightRequest="250" HorizontalScrollBarVisibility="Never">
+                <CollectionView.ItemsLayout>
+                    <LinearItemsLayout Orientation="Horizontal" ItemSpacing="8"/>
+                </CollectionView.ItemsLayout>
+                <CollectionView.ItemTemplate>
+                    <DataTemplate>
+                        <Frame HasShadow="True" CornerRadius="8" Padding="0">
+                            <Image Source="{Binding .}" Aspect="AspectFill" WidthRequest="250" HeightRequest="250" BackgroundColor="LightGray"/>
+                        </Frame>
+                    </DataTemplate>
+                </CollectionView.ItemTemplate>
+            </CollectionView>
+
+            <!-- Цена и категория -->
+            <Label Text="{Binding Advert.Price, StringFormat='{0:C0}'}" FontSize="20" FontAttributes="Bold" TextColor="#008000"/>
+            <Label Text="{Binding Advert.CategoryTitle}" FontSize="14" TextColor="#777"/>
+
+            <!-- Описание -->
+            <Label Text="{Binding Advert.Description}" FontSize="16" LineBreakMode="WordWrap"/>
+
+            <!-- Дата создания и изменения -->
+            <Label Text="{Binding Advert.CreatedAt, StringFormat='Создано: {0:dd.MM.yyyy HH:mm}'}" FontSize="12" TextColor="#555"/>
+            <Label Text="{Binding Advert.UpdatedAt, StringFormat='Обновлено: {0:dd.MM.yyyy HH:mm}'}" FontSize="12" TextColor="#555" IsVisible="{Binding Advert.UpdatedAt, Converter={StaticResource NullToBoolConverter}}"/>
+
+        </VerticalStackLayout>
+    </ScrollView>
+
+</ContentPage>
