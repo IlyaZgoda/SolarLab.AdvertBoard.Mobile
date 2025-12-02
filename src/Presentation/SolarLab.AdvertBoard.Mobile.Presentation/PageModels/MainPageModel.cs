@@ -5,6 +5,7 @@ using SolarLab.AdvertBoard.Mobile.Contracts.Categories;
 using SolarLab.AdvertBoard.Mobile.Presentation.Infrastructure.Http;
 using SolarLab.AdvertBoard.Mobile.Presentation.Models;
 using System.Collections.ObjectModel;
+using System.ComponentModel;
 using System.Diagnostics;
 
 namespace SolarLab.AdvertBoard.Mobile.Presentation.PageModels
@@ -31,18 +32,31 @@ namespace SolarLab.AdvertBoard.Mobile.Presentation.PageModels
      !string.IsNullOrEmpty(_appliedFilters.SearchText) ||
      (_appliedFilters.SortBy != null && _appliedFilters.SortDescending != true));
         public MainPageModel(
-        ModalErrorHandler errorHandler,
-        ICategoryApiClient categoryApiClient,
-        IAdvertApiClient advertApiClient,
-        ICategoryStore categoryStore,
-        FiltersPageModel filters)
+            ModalErrorHandler errorHandler,
+            ICategoryApiClient categoryApiClient,
+            IAdvertApiClient advertApiClient,
+            ICategoryStore categoryStore,
+            FiltersPageModel filters,
+            IAuthService authService)
         {
             this.errorHandler = errorHandler;
             this.categoryApiClient = categoryApiClient;
             this.advertApiClient = advertApiClient;
             this.categoryStore = categoryStore;
             this.filters = filters;
+            _authService = authService;
+
+            // Подписка на PropertyChanged, чтобы обновлять IsUserAuthenticated
+            if (_authService is INotifyPropertyChanged npc)
+            {
+                npc.PropertyChanged += (s, e) =>
+                {
+                    if (e.PropertyName == nameof(_authService.IsAuthenticated))
+                        OnPropertyChanged(nameof(IsUserAuthenticated));
+                };
+            }
         }
+        public bool IsUserAuthenticated => _authService.IsAuthenticated;
 
         [ObservableProperty]
         bool _isRefreshing;
@@ -184,6 +198,7 @@ namespace SolarLab.AdvertBoard.Mobile.Presentation.PageModels
         private IAdvertApiClient advertApiClient;
         private ICategoryStore categoryStore;
         private FiltersPageModel filters;
+        private IAuthService _authService;
 
         public async void ApplyQueryAttributes(IDictionary<string, object> query)
         {
@@ -243,6 +258,20 @@ namespace SolarLab.AdvertBoard.Mobile.Presentation.PageModels
 
             // сброс, чтобы можно было выбрать тот же элемент снова
             SelectedAdvert = null;
+        }
+
+        [RelayCommand]
+        private async Task Login()
+        {
+            // Переходим на страницу логина
+            await Shell.Current.GoToAsync("login");
+        }
+
+        [RelayCommand]
+        private async Task OpenProfile()
+        {
+            // Переходим на страницу логина
+            await Shell.Current.GoToAsync("profile");
         }
     }
 }

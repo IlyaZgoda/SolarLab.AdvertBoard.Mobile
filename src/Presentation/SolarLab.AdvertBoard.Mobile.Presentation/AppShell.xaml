@@ -18,6 +18,7 @@
         ContentTemplate="{DataTemplate pages:FiltersPage}" />
     
     
+    
     <!--<ShellContent
         Title="Projects"
         Icon="{StaticResource IconProjects}"

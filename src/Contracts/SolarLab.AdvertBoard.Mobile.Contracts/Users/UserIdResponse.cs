@@ -4,5 +4,5 @@
     /// DTO для получения идентификатора пользователя.
     /// </summary>
     /// <param name="UserId">Идентификатор пользователя.</param>
-    public record UserIdResponse(Guid UserId);  
+    public record UserIdResponse(Guid UserId);
 }

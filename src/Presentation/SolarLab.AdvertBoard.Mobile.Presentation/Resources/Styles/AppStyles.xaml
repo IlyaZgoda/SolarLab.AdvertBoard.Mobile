@@ -50,6 +50,13 @@
         <OnIdiom.Desktop>15</OnIdiom.Desktop>
     </OnIdiom>
 
+
+    <FontImageSource x:Key="IconProfile"
+             Glyph="{x:Static f:FluentUI.person_circle_24_regular}"
+             FontFamily="{x:Static f:FluentUI.FontFamily}"
+             Color="{AppThemeBinding Light={StaticResource DarkOnLightBackground}, Dark={StaticResource LightOnDarkBackground}}"
+             Size="{StaticResource IconSize}" />
+    
     <FontImageSource x:Key="CloseIcon"
              Glyph="{x:Static f:FluentUI.arrow_left_24_regular}"
              FontFamily="{x:Static f:FluentUI.FontFamily}"
@@ -309,5 +316,82 @@
         <Setter Property="PullingThreshold" Value="100"/>
         <Setter Property="ProgressColor" Value="{StaticResource Primary}"/>
     </Style>
+
+
+
+
+    <!-- Карточка профиля / действий -->
+    <Style x:Key="ProfileCardStyle" TargetType="Border">
+        <Setter Property="StrokeShape" Value="RoundRectangle 20"/>
+        <Setter Property="Background" 
+            Value="{AppThemeBinding Light={StaticResource LightSecondaryBackground},
+                                      Dark={StaticResource DarkSecondaryBackground}}"/>
+        <Setter Property="StrokeThickness" Value="0"/>
+        <Setter Property="Padding" Value="{StaticResource LayoutPadding}"/>
+        <Setter Property="Margin" Value="0,10"/>
+    </Style>
+
+
+    <!-- Основная кнопка (синяя) -->
+    <Style x:Key="PrimaryButton" TargetType="Button">
+        <Setter Property="Padding" Value="14,10"/>
+        <Setter Property="CornerRadius" Value="12"/>
+        <Setter Property="FontSize" Value="17"/>
+        <Setter Property="FontAttributes" Value="Bold"/>
+        <Setter Property="BackgroundColor" Value="{StaticResource Primary}"/>
+        <Setter Property="TextColor" 
+            Value="{StaticResource White}" />
+    </Style>
+
+
+    <!-- Вторичная кнопка (серый фон) -->
+    <Style x:Key="ActionButton" TargetType="Button">
+        <Setter Property="Padding" Value="14,10"/>
+        <Setter Property="CornerRadius" Value="12"/>
+        <Setter Property="FontSize" Value="17"/>
+        <Setter Property="BackgroundColor" 
+            Value="{AppThemeBinding Light={StaticResource Gray200}, 
+                                      Dark={StaticResource Gray700}}"/>
+        <Setter Property="TextColor"
+            Value="{AppThemeBinding Light={StaticResource DarkOnLightBackground},
+                                      Dark={StaticResource LightOnDarkBackground}}"/>
+    </Style>
+
+
+    <!-- Кнопка контурная -->
+    <Style x:Key="OutlineButton" TargetType="Button">
+        <Setter Property="Padding" Value="14,10"/>
+        <Setter Property="CornerRadius" Value="12"/>
+        <Setter Property="FontSize" Value="17"/>
+        <Setter Property="BackgroundColor" Value="Transparent"/>
+        <Setter Property="BorderColor" 
+            Value="{AppThemeBinding Light={StaticResource Gray300}, Dark={StaticResource Gray600}}"/>
+        <Setter Property="BorderWidth" Value="1"/>
+        <Setter Property="TextColor" 
+            Value="{AppThemeBinding Light={StaticResource DarkOnLightBackground}, 
+                                      Dark={StaticResource LightOnDarkBackground}}"/>
+    </Style>
+
+
+    <!-- Заголовок секции (например: Мои объявления) -->
+    <Style x:Key="SectionTitleStyle" TargetType="Label" BasedOn="{StaticResource Title3}">
+        <Setter Property="Margin" Value="0,0,0,5" />
+    </Style>
+
+
+    <!-- Заголовок имени пользователя -->
+    <Style x:Key="ProfileNameStyle" TargetType="Label" BasedOn="{StaticResource Title2}">
+        <Setter Property="Margin" Value="0" />
+    </Style>
+
+
+    <!-- Email под именем -->
+    <Style x:Key="ProfileEmailStyle" TargetType="Label" BasedOn="{StaticResource Caption1}">
+        <Setter Property="TextColor"
+            Value="{AppThemeBinding Light={StaticResource Gray600}, Dark={StaticResource Gray400}}"/>
+    </Style>
+
+
+
 
 </ResourceDictionary>

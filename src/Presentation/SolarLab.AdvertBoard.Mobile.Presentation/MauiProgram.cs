@@ -3,6 +3,7 @@ using CommunityToolkit.Maui;
 using FFImageLoading.Maui;
 using Microsoft.Extensions.Logging;
 using SolarLab.AdvertBoard.Mobile.Presentation.Infrastructure.Http;
+using Syncfusion.Maui.Core.Hosting;
 using Syncfusion.Maui.Toolkit.Hosting;
 using System.Globalization;
 
@@ -23,6 +24,7 @@ namespace SolarLab.AdvertBoard.Mobile.Presentation
                 .UseFFImageLoading()
                 .UseMauiCommunityToolkit()
                 .ConfigureSyncfusionToolkit()
+                .ConfigureSyncfusionCore()
                 .ConfigureMauiHandlers(handlers =>
                 {
 #if WINDOWS
@@ -76,6 +78,10 @@ namespace SolarLab.AdvertBoard.Mobile.Presentation
             builder.Services.AddSingleton<MainPageModel>();
             builder.Services.AddSingleton<FiltersPageModel>();
             builder.Services.AddTransient<AdvertDetailsPageModel>();
+            builder.Services.AddTransient<LoginPageModel>();
+            builder.Services.AddTransient<RegisterPageModel>();
+            builder.Services.AddTransient<ProfilePageModel>();
+            builder.Services.AddTransient<EditProfilePageModel>();
             builder.Services.AddSingleton<ProjectListPageModel>();
             builder.Services.AddSingleton<ManageMetaPageModel>();
 
@@ -91,7 +97,9 @@ namespace SolarLab.AdvertBoard.Mobile.Presentation
             builder.Services.AddTransient<IAdvertApiClient, AdvertApiClient>();
             builder.Services.AddTransient<IImageApiClient, ImageApiClient>();
             builder.Services.AddTransient<ICommentsApiClient, CommentsApiClient>();
+            builder.Services.AddTransient<IUsersApiClient, UsersApiClient>();
             builder.Services.AddSingleton<ICategoryStore, CategoryStore>();
+            builder.Services.AddSingleton<IAuthService, AuthService>();
 
             return builder.Build();
         }

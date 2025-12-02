@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage
+    x:Class="SolarLab.AdvertBoard.Mobile.Presentation.Pages.EditProfilePage"
+    xmlns:pageModels="clr-namespace:SolarLab.AdvertBoard.Mobile.Presentation.PageModels"  
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:sf="clr-namespace:Syncfusion.Maui.Toolkit.TextInputLayout;assembly=Syncfusion.Maui.Toolkit"
+    BackgroundColor="{AppThemeBinding Light={StaticResource LightBackground}, Dark={StaticResource DarkBackground}}"
+    Title="Редактирование профиля"
+    x:DataType="pageModels:EditProfilePageModel">
+
+    <ScrollView>
+        <VerticalStackLayout Padding="{StaticResource LayoutPadding}" Spacing="{StaticResource LayoutSpacing}">
+
+            <!-- Имя -->
+            <sf:SfTextInputLayout Hint="Имя"
+                                  IsHintAlwaysFloated="True"
+                                  ContainerType="Outlined"
+                                  Stroke="{AppThemeBinding Light={StaticResource Primary}, Dark={StaticResource Primary}}"
+                                  HintLabelStyle="{AppThemeBinding Light={StaticResource Body1}, Dark={StaticResource Body1}}"
+                                  OutlineCornerRadius="12"
+                                  Margin="0,0,0,10">
+                <Entry Text="{Binding FirstName, Mode=TwoWay}"
+                       TextColor="{AppThemeBinding Light={StaticResource DarkOnLightBackground}, Dark={StaticResource LightOnDarkBackground}}"/>
+            </sf:SfTextInputLayout>
+
+            <!-- Фамилия -->
+            <sf:SfTextInputLayout Hint="Фамилия"
+                                  IsHintAlwaysFloated="True"
+                                  ContainerType="Outlined"
+                                  Stroke="{AppThemeBinding Light={StaticResource Primary}, Dark={StaticResource Primary}}"
+                                  HintLabelStyle="{AppThemeBinding Light={StaticResource Body1}, Dark={StaticResource Body1}}"
+                                  OutlineCornerRadius="12"
+                                  Margin="0,0,0,10">
+                <Entry Text="{Binding LastName, Mode=TwoWay}"
+                       TextColor="{AppThemeBinding Light={StaticResource DarkOnLightBackground}, Dark={StaticResource LightOnDarkBackground}}"/>
+            </sf:SfTextInputLayout>
+
+            <!-- Отчество -->
+            <sf:SfTextInputLayout Hint="Отчество"
+                                  IsHintAlwaysFloated="True"
+                                  ContainerType="Outlined"
+                                  Stroke="{AppThemeBinding Light={StaticResource Primary}, Dark={StaticResource Primary}}"
+                                  HintLabelStyle="{AppThemeBinding Light={StaticResource Body1}, Dark={StaticResource Body1}}"
+                                  OutlineCornerRadius="12"
+                                  Margin="0,0,0,10">
+                <Entry Text="{Binding MiddleName, Mode=TwoWay}"
+                       TextColor="{AppThemeBinding Light={StaticResource DarkOnLightBackground}, Dark={StaticResource LightOnDarkBackground}}"/>
+            </sf:SfTextInputLayout>
+
+            <!-- Основная почта -->
+            <sf:SfTextInputLayout Hint="Электронная почта"
+                                  IsHintAlwaysFloated="True"
+                                  ContainerType="Outlined"
+                                  Stroke="{AppThemeBinding Light={StaticResource Primary}, Dark={StaticResource Primary}}"
+                                  HintLabelStyle="{AppThemeBinding Light={StaticResource Body1}, Dark={StaticResource Body1}}"
+                                  OutlineCornerRadius="12"
+                                  Margin="0,0,0,10">
+                <Entry Text="{Binding ContactEmail, Mode=TwoWay}"
+                       Keyboard="Email"
+                       TextColor="{AppThemeBinding Light={StaticResource DarkOnLightBackground}, Dark={StaticResource LightOnDarkBackground}}"/>
+            </sf:SfTextInputLayout>
+
+            <!-- Контактная почта -->
+            <sf:SfTextInputLayout Hint="Контактная почта"
+                                  IsHintAlwaysFloated="True"
+                                  ContainerType="Outlined"
+                                  Stroke="{AppThemeBinding Light={StaticResource Primary}, Dark={StaticResource Primary}}"
+                                  HintLabelStyle="{AppThemeBinding Light={StaticResource Body1}, Dark={StaticResource Body1}}"
+                                  OutlineCornerRadius="12"
+                                  Margin="0,0,0,10">
+                <Entry Text="{Binding SecondaryEmail, Mode=TwoWay}"
+                       Keyboard="Email"
+                       TextColor="{AppThemeBinding Light={StaticResource DarkOnLightBackground}, Dark={StaticResource LightOnDarkBackground}}"/>
+            </sf:SfTextInputLayout>
+
+            <!-- Телефон -->
+            <sf:SfTextInputLayout Hint="Телефон"
+                                  IsHintAlwaysFloated="True"
+                                  ContainerType="Outlined"
+                                  Stroke="{AppThemeBinding Light={StaticResource Primary}, Dark={StaticResource Primary}}"
+                                  HintLabelStyle="{AppThemeBinding Light={StaticResource Body1}, Dark={StaticResource Body1}}"
+                                  OutlineCornerRadius="12"
+                                  Margin="0,0,0,20">
+                <Entry Text="{Binding Phone, Mode=TwoWay}"
+                       Keyboard="Telephone"
+                       TextColor="{AppThemeBinding Light={StaticResource DarkOnLightBackground}, Dark={StaticResource LightOnDarkBackground}}"/>
+            </sf:SfTextInputLayout>
+
+            <!-- Кнопки -->
+            <HorizontalStackLayout Spacing="12" HorizontalOptions="Center">
+                <Button Text="Отмена" Style="{StaticResource ActionButton}" Command="{Binding CancelCommand}" WidthRequest="150"/>
+                <Button Text="Сохранить" Style="{StaticResource PrimaryButton}" Command="{Binding SaveCommand}" WidthRequest="150"/>
+            </HorizontalStackLayout>
+
+        </VerticalStackLayout>
+    </ScrollView>
+</ContentPage>

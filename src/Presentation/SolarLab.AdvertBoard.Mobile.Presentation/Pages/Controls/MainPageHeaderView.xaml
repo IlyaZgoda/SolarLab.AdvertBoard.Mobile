@@ -21,8 +21,9 @@
              StrokeThickness="0"
              Background="{AppThemeBinding Light={StaticResource LightSecondaryBackground}, Dark={StaticResource DarkSecondaryBackground}}"
              VerticalOptions="Center"
-             HorizontalOptions="Fill"
-             HeightRequest="40">
+             HorizontalOptions="Start"
+             HeightRequest="40" 
+             WidthRequest="180">
             <Grid ColumnDefinitions="Auto,*,Auto" ColumnSpacing="{StaticResource LayoutSpacing}">
 
                 <!--Иконка поиска-->
@@ -66,13 +67,41 @@
             </Grid>
         </Border>
 
-        <!--Кнопка Войти-->
+        <!-- Кнопка Войти -->
         <Button Grid.Column="3"
-             Text="Войти"
-             BackgroundColor="Transparent"
-             TextColor="{AppThemeBinding Light={StaticResource DarkOnLightBackground}, Dark={StaticResource LightOnDarkBackground}}"
-             FontAttributes="Bold"
-             VerticalOptions="Center"
-             Command="{Binding LoginCommand}"/>
+            Text="Войти"
+            BackgroundColor="Transparent"
+            TextColor="{AppThemeBinding Light={StaticResource DarkOnLightBackground}, Dark={StaticResource LightOnDarkBackground}}"
+            FontAttributes="Bold"
+            VerticalOptions="Center"
+            Command="{Binding LoginCommand}">
+            <Button.Triggers>
+                <DataTrigger TargetType="Button"
+                         Binding="{Binding IsUserAuthenticated}"
+                         Value="True">
+                    <Setter Property="IsVisible" Value="False" />
+                </DataTrigger>
+            </Button.Triggers>
+        </Button>
+
+        <!-- Иконка профиля -->
+        <Image Grid.Column="3"
+           Source="{StaticResource IconProfile}"
+           HeightRequest="32"
+           WidthRequest="32"
+           VerticalOptions="Center"
+               Margin="0,0,10,0">
+            <Image.GestureRecognizers>
+                <TapGestureRecognizer Command="{Binding OpenProfileCommand}" />
+            </Image.GestureRecognizers>
+            <Image.Triggers>
+                <DataTrigger TargetType="Image"
+                         Binding="{Binding IsUserAuthenticated}"
+                         Value="False">
+                    <Setter Property="IsVisible" Value="False" />
+                </DataTrigger>
+            </Image.Triggers>
+        </Image>
+
     </Grid>
 </ContentView>

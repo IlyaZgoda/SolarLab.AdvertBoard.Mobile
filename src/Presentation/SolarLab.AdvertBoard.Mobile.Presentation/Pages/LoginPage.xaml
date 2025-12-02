@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:pageModels="clr-namespace:SolarLab.AdvertBoard.Mobile.Presentation.PageModels"
+             x:Class="SolarLab.AdvertBoard.Mobile.Presentation.Pages.LoginPage"
+             x:DataType="pageModels:LoginPageModel"
+             Title="Авторизация">
+
+    <ScrollView>
+        <VerticalStackLayout Padding="24" Spacing="20" VerticalOptions="Center">
+
+            <!-- Заголовок -->
+            <Label Text="Введите учётные данные" 
+                   FontSize="24" 
+                   FontAttributes="Bold"
+                   HorizontalOptions="Center"
+                   TextColor="{AppThemeBinding Light={StaticResource DarkOnLightBackground}, Dark={StaticResource LightOnDarkBackground}}" />
+
+            <!-- Email -->
+            <Entry Placeholder="Email"
+                   Text="{Binding Email, Mode=TwoWay}"
+                   Keyboard="Email"
+                   HeightRequest="50"
+                   BackgroundColor="{AppThemeBinding Light={StaticResource LightSecondaryBackground}, Dark={StaticResource DarkSecondaryBackground}}"
+                   TextColor="{AppThemeBinding Light={StaticResource DarkOnLightBackground}, Dark={StaticResource LightOnDarkBackground}}"
+                   PlaceholderColor="{AppThemeBinding Light={StaticResource Gray500}, Dark={StaticResource Gray400}}"
+                   CornerRadius="8"
+                   Padding="12" />
+
+            <!-- Пароль -->
+            <Entry Placeholder="Пароль"
+                   Text="{Binding Password, Mode=TwoWay}"
+                   IsPassword="True"
+                   HeightRequest="50"
+                   BackgroundColor="{AppThemeBinding Light={StaticResource LightSecondaryBackground}, Dark={StaticResource DarkSecondaryBackground}}"
+                   TextColor="{AppThemeBinding Light={StaticResource DarkOnLightBackground}, Dark={StaticResource LightOnDarkBackground}}"
+                   PlaceholderColor="{AppThemeBinding Light={StaticResource Gray500}, Dark={StaticResource Gray400}}"
+                   CornerRadius="8"
+                   Padding="12" />
+
+            <!-- Кнопка Войти -->
+            <Button Text="Войти"
+                    Command="{Binding LoginCommand}"
+                    HeightRequest="50"
+                    CornerRadius="8"
+                    BackgroundColor="{AppThemeBinding Light={StaticResource PrimaryColor}, Dark={StaticResource PrimaryColorDark}}"
+                    TextColor="White"
+                    FontAttributes="Bold" />
+
+            <!-- Кнопка Зарегистрироваться -->
+            <Label Text="Зарегистрироваться"
+                   HorizontalOptions="Center"
+                   TextColor="{AppThemeBinding Light={StaticResource PrimaryColor}, Dark={StaticResource PrimaryColorDark}}"
+                   FontAttributes="Bold">
+                <Label.GestureRecognizers>
+                    <TapGestureRecognizer Command="{Binding RegisterCommand}" />
+                </Label.GestureRecognizers>
+            </Label>
+
+        </VerticalStackLayout>
+    </ScrollView>
+</ContentPage>
