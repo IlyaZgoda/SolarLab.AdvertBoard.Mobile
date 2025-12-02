@@ -10,6 +10,8 @@ namespace SolarLab.AdvertBoard.Mobile.Presentation.Infrastructure.Http
     public interface IImageApiClient
     {
         Task<ImageResponse> GetImageAsync(Guid imageId);
+        Task<string> GetUrlForDraftImage(Guid imageId, string jwt);
+        Task<ImageIdResponse> UploadDraftImageAsync(Guid advertId, Stream imageStream, string jwt);
     }
 
     public interface IUsersApiClient
