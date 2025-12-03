@@ -4,7 +4,7 @@
              xmlns:sf="clr-namespace:Syncfusion.Maui.Toolkit.SegmentedControl;assembly=Syncfusion.Maui.Toolkit"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="SolarLab.AdvertBoard.Mobile.Presentation.Pages.ProfilePage"
-             Title="ProfilePage">
+             Title="Профиль">
     <ScrollView>
         <VerticalStackLayout Padding="20" Spacing="24">
 

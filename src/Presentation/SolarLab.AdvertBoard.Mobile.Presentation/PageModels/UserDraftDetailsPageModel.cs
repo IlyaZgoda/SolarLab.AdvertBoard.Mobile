@@ -1,6 +1,7 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using SolarLab.AdvertBoard.Mobile.Contracts.Adverts;
+using SolarLab.AdvertBoard.Mobile.Contracts.Categories;
 using SolarLab.AdvertBoard.Mobile.Presentation.Infrastructure.Http;
 using System;
 using System.Collections.Generic;
@@ -51,21 +52,38 @@ namespace SolarLab.AdvertBoard.Mobile.Presentation.PageModels
         private readonly IAdvertApiClient _client;
         private readonly IAuthService _auth;
         private readonly IImageApiClient _imageClient;
+        private readonly ICategoryStore _categoryStore;
 
-        public UserDraftDetailsPageModel(IAdvertApiClient client, IAuthService auth, IImageApiClient imageClient)
+        public UserDraftDetailsPageModel(IAdvertApiClient client, IAuthService auth, IImageApiClient imageClient, ICategoryStore categoryStore)
         {
             _client = client;
             _auth = auth;
             _imageClient = imageClient;
+            _categoryStore = categoryStore;
 
             AdvertImages = new ObservableCollection<PhotoViewModel>();
+
+            // Обновляем листовые категории сразу
+            UpdateLeafCategories();
+
+            // Подписка на изменения
+            _categoryStore.Categories.CollectionChanged += (_, __) => UpdateLeafCategories();
         }
+
 
         [ObservableProperty]
         private AdvertDraftDetailsResponse? _advert;
 
         [ObservableProperty]
         private ObservableCollection<PhotoViewModel> _advertImages;
+
+        [ObservableProperty]
+        private CategoryNode? _selectedCategory;
+
+        [ObservableProperty]
+        private ObservableCollection<CategoryNode> _leafCategories = new();
+
+        public ObservableCollection<CategoryNode> Categories => _categoryStore.Categories;
 
         // ============================
         // Навигация
@@ -87,6 +105,9 @@ namespace SolarLab.AdvertBoard.Mobile.Presentation.PageModels
             {
                 Advert = await _client.GetDraftDetailsAsync(advertId, _auth.Jwt!);
                 await LoadImagesAsync();
+
+                // Устанавливаем выбранную категорию по Id после загрузки
+                SelectedCategory = LeafCategories.FirstOrDefault(c => c.Id == Advert.CategoryId);
             }
             catch (Exception ex)
             {
@@ -211,19 +232,17 @@ namespace SolarLab.AdvertBoard.Mobile.Presentation.PageModels
             try
             {
                 var request = new UpdateAdvertDraftRequest(
-                    CategoryId: Advert.CategoryId,
+                    CategoryId: SelectedCategory?.Id ?? Advert.CategoryId,
                     Title: string.IsNullOrWhiteSpace(Advert.Title) ? null : Advert.Title,
                     Description: string.IsNullOrWhiteSpace(Advert.Description) ? null : Advert.Description,
                     Price: Advert.Price
                 );
 
-                // Логируем JSON перед отправкой
                 var json = JsonSerializer.Serialize(request);
                 System.Diagnostics.Debug.WriteLine($"PATCH /draft request JSON: {json}");
 
                 await _client.UpdateDraftAsync(Advert.Id, request, _auth.Jwt!);
 
-                // Обновляем локально
                 Advert = await _client.GetDraftDetailsAsync(Advert.Id, _auth.Jwt!);
 
                 await Application.Current.MainPage.DisplayAlert("Успех", "Черновик сохранён", "OK");
@@ -235,6 +254,30 @@ namespace SolarLab.AdvertBoard.Mobile.Presentation.PageModels
             catch (Exception ex)
             {
                 await Application.Current.MainPage.DisplayAlert("Ошибка", ex.Message, "OK");
+            }
+        }
+
+        // ============================
+        // Листовые категории
+        // ============================
+        private void UpdateLeafCategories()
+        {
+            LeafCategories.Clear();
+            foreach (var leaf in GetLeafCategories(Categories))
+                LeafCategories.Add(leaf);
+        }
+
+        private IEnumerable<CategoryNode> GetLeafCategories(IEnumerable<CategoryNode> nodes)
+        {
+            foreach (var node in nodes)
+            {
+                if (node.Children == null || node.Children.Count == 0)
+                    yield return node;
+                else
+                {
+                    foreach (var leaf in GetLeafCategories(node.Children))
+                        yield return leaf;
+                }
             }
         }
     }

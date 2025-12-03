@@ -97,10 +97,15 @@
                        BackgroundColor="{AppThemeBinding Light=#f0f0f0, Dark=#2c2c2c}" />
 
                 <Label Text="Категория" FontSize="12" TextColor="#555" />
-                <Entry Text="{Binding Advert.CategoryTitle}"
-                       Placeholder="Выберите категорию"
-                       FontSize="18"
-                       BackgroundColor="{AppThemeBinding Light=#f0f0f0, Dark=#2c2c2c}" />
+
+                <Picker
+    ItemsSource="{Binding LeafCategories}"
+    ItemDisplayBinding="{Binding Title}"
+    SelectedItem="{Binding SelectedCategory}"
+    Title="Выберите категорию" />
+
+
+
 
                 <Label Text="Описание" FontSize="12" TextColor="#555" />
                 <Editor Text="{Binding Advert.Description}"

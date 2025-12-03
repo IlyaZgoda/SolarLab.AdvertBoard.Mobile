@@ -3,7 +3,7 @@
              xmlns:adverts="clr-namespace:SolarLab.AdvertBoard.Mobile.Presentation.Pages.Controls.Adverts"
              xmlns:pageModels="clr-namespace:SolarLab.AdvertBoard.Mobile.Presentation.PageModels"
              x:Class="SolarLab.AdvertBoard.Mobile.Presentation.Pages.PublishedUserAdvertsPage"
-             Title="PublishedUserAdvertsPage">
+             Title="Опубликованные">
 
     <Grid Padding="16" RowDefinitions="*,Auto">
 
