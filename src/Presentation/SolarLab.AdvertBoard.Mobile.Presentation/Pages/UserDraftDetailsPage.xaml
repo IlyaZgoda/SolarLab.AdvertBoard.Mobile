@@ -135,6 +135,20 @@
         Style="{StaticResource PrimaryButton}"
         HorizontalOptions="Fill" />
 
+            <Button Text="Опубликовать"
+        Command="{Binding PublishDraftCommand}"
+        Style="{StaticResource PrimaryButton}"
+        HorizontalOptions="Fill"
+        BackgroundColor="Green"
+        TextColor="White" />
+
+            <Button Text="Удалить черновик"
+        Command="{Binding DeleteDraftCommand}"
+        Style="{StaticResource PrimaryButton}"
+        HorizontalOptions="Fill"
+        BackgroundColor="Red"
+        TextColor="White" />
+
 
         </VerticalStackLayout>
     </ScrollView>

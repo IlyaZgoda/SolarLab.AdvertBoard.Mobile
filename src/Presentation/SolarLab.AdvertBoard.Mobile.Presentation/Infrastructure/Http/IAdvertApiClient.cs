@@ -12,5 +12,7 @@ namespace SolarLab.AdvertBoard.Mobile.Presentation.Infrastructure.Http
         Task<PaginationCollection<AdvertDraftItem>> GetUserDraftsAsync(GetUserAdvertDraftsRequest request, string jwt);
         Task<AdvertDraftDetailsResponse> GetDraftDetailsAsync(Guid id, string jwt);
         Task UpdateDraftAsync(Guid advertId, UpdateAdvertDraftRequest request, string jwt);
+        Task PublishDraftAsync(Guid advertId, string jwt);
+        Task DeleteDraftAsync(Guid advertId, string jwt);
     }
 }

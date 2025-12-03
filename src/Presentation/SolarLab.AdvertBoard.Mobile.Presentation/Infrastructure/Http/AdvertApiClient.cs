@@ -11,6 +11,20 @@ namespace SolarLab.AdvertBoard.Mobile.Presentation.Infrastructure.Http
     {
         private readonly HttpClient _httpClient = factory.CreateClient("BaseApi");
 
+        public async Task DeleteDraftAsync(Guid advertId, string jwt)
+        {
+            _httpClient.DefaultRequestHeaders.Authorization =
+                new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", jwt);
+
+            var url = $"/api/adverts/drafts/{advertId}";
+
+            var result = await _httpClient.DeleteAsync(url);
+
+            result.EnsureSuccessStatusCode();
+
+            return;
+        }
+
         public async Task<PublishedAdvertDetailsResponse> GetAdvertDetailsAsync(Guid id)
         {
             var url = $"/api/adverts/{id}";
@@ -98,6 +112,20 @@ namespace SolarLab.AdvertBoard.Mobile.Presentation.Infrastructure.Http
             response.EnsureSuccessStatusCode();
 
             return await response.Content.ReadFromJsonAsync<PaginationCollection<PublishedAdvertItem>>();
+        }
+
+        public async Task PublishDraftAsync(Guid advertId, string jwt)
+        {
+            _httpClient.DefaultRequestHeaders.Authorization =
+                new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", jwt);
+
+            var url = $"/api/adverts/drafts/{advertId}/publish";
+
+            var result = await _httpClient.PatchAsync(url, null);
+
+            result.EnsureSuccessStatusCode();
+
+            return;
         }
 
         public async Task UpdateDraftAsync(Guid advertId, UpdateAdvertDraftRequest request, string jwt)

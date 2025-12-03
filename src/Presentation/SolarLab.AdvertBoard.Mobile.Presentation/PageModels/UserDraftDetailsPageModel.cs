@@ -49,14 +49,14 @@ namespace SolarLab.AdvertBoard.Mobile.Presentation.PageModels
     // ============================
     public partial class UserDraftDetailsPageModel : ObservableObject, IQueryAttributable
     {
-        private readonly IAdvertApiClient _client;
+        private readonly IAdvertApiClient _advertClient;
         private readonly IAuthService _auth;
         private readonly IImageApiClient _imageClient;
         private readonly ICategoryStore _categoryStore;
 
         public UserDraftDetailsPageModel(IAdvertApiClient client, IAuthService auth, IImageApiClient imageClient, ICategoryStore categoryStore)
         {
-            _client = client;
+            _advertClient = client;
             _auth = auth;
             _imageClient = imageClient;
             _categoryStore = categoryStore;
@@ -103,7 +103,7 @@ namespace SolarLab.AdvertBoard.Mobile.Presentation.PageModels
         {
             try
             {
-                Advert = await _client.GetDraftDetailsAsync(advertId, _auth.Jwt!);
+                Advert = await _advertClient.GetDraftDetailsAsync(advertId, _auth.Jwt!);
                 await LoadImagesAsync();
 
                 // Устанавливаем выбранную категорию по Id после загрузки
@@ -179,7 +179,7 @@ namespace SolarLab.AdvertBoard.Mobile.Presentation.PageModels
                     return;
                 }
 
-                Advert = await _client.GetDraftDetailsAsync(Advert.Id, _auth.Jwt!);
+                Advert = await _advertClient.GetDraftDetailsAsync(Advert.Id, _auth.Jwt!);
                 await LoadImagesAsync();
             }
             catch (Exception ex)
@@ -210,7 +210,7 @@ namespace SolarLab.AdvertBoard.Mobile.Presentation.PageModels
             {
                 await _imageClient.DeleteDraftImageAsync(Advert.Id, imageId, _auth.Jwt!);
 
-                Advert = await _client.GetDraftDetailsAsync(Advert.Id, _auth.Jwt!);
+                Advert = await _advertClient.GetDraftDetailsAsync(Advert.Id, _auth.Jwt!);
                 await LoadImagesAsync();
             }
             catch (Exception ex)
@@ -241,9 +241,9 @@ namespace SolarLab.AdvertBoard.Mobile.Presentation.PageModels
                 var json = JsonSerializer.Serialize(request);
                 System.Diagnostics.Debug.WriteLine($"PATCH /draft request JSON: {json}");
 
-                await _client.UpdateDraftAsync(Advert.Id, request, _auth.Jwt!);
+                await _advertClient.UpdateDraftAsync(Advert.Id, request, _auth.Jwt!);
 
-                Advert = await _client.GetDraftDetailsAsync(Advert.Id, _auth.Jwt!);
+                Advert = await _advertClient.GetDraftDetailsAsync(Advert.Id, _auth.Jwt!);
 
                 await Application.Current.MainPage.DisplayAlert("Успех", "Черновик сохранён", "OK");
             }
@@ -280,5 +280,78 @@ namespace SolarLab.AdvertBoard.Mobile.Presentation.PageModels
                 }
             }
         }
+
+        [RelayCommand]
+        private async Task PublishDraftAsync()
+        {
+            if (Advert == null)
+                return;
+
+            var confirm = await Application.Current.MainPage.DisplayAlert(
+                "Публикация",
+                "Вы уверены, что хотите опубликовать этот черновик?",
+                "Опубликовать", "Отмена");
+
+            if (!confirm)
+                return;
+
+            try
+            {
+                // Отправка на сервер
+                await _advertClient.PublishDraftAsync(Advert.Id, _auth.Jwt!);
+
+                // Обновляем локально (по желанию, можно пропустить)
+                Advert = await _advertClient.GetDraftDetailsAsync(Advert.Id, _auth.Jwt!);
+
+                await Application.Current.MainPage.DisplayAlert("Успех", "Объявление опубликовано", "OK");
+
+                // Возврат на предыдущую страницу
+                await Shell.Current.GoToAsync("..");
+            }
+            catch (HttpRequestException ex)
+            {
+                await Application.Current.MainPage.DisplayAlert("Ошибка сервера", ex.Message, "OK");
+            }
+            catch (Exception ex)
+            {
+                await Application.Current.MainPage.DisplayAlert("Ошибка", ex.Message, "OK");
+            }
+        }
+
+        [RelayCommand]
+        private async Task DeleteDraftAsync()
+        {
+            if (Advert == null)
+                return;
+
+            var confirm = await Application.Current.MainPage.DisplayAlert(
+                "Удаление черновика",
+                "Вы уверены, что хотите удалить этот черновик? Действие нельзя отменить.",
+                "Удалить", "Отмена");
+
+            if (!confirm)
+                return;
+
+            try
+            {
+                // Отправка запроса на сервер
+                await _advertClient.DeleteDraftAsync(Advert.Id, _auth.Jwt!);
+
+                await Application.Current.MainPage.DisplayAlert("Успех", "Черновик удалён", "OK");
+
+                // Возврат на предыдущую страницу
+                await Shell.Current.GoToAsync("..");
+            }
+            catch (HttpRequestException ex)
+            {
+                await Application.Current.MainPage.DisplayAlert("Ошибка сервера", ex.Message, "OK");
+            }
+            catch (Exception ex)
+            {
+                await Application.Current.MainPage.DisplayAlert("Ошибка", ex.Message, "OK");
+            }
+        }
+
+
     }
 }
