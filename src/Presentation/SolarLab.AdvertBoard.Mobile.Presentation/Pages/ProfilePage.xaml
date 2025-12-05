@@ -1,122 +1,300 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:controls="clr-namespace:SolarLab.AdvertBoard.Mobile.Presentation.Pages.Controls"
              xmlns:sf="clr-namespace:Syncfusion.Maui.Toolkit.SegmentedControl;assembly=Syncfusion.Maui.Toolkit"
-             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:f="clr-namespace:Fonts"
              x:Class="SolarLab.AdvertBoard.Mobile.Presentation.Pages.ProfilePage"
-             Title="Профиль">
+             Title="Профиль"
+             BackgroundColor="{AppThemeBinding Light={StaticResource LightBackground}, Dark={StaticResource DarkBackground}}">
+
+    <ContentPage.Resources>
+
+        <!-- Стиль для строки меню -->
+        <Style x:Key="MenuRowStyle" TargetType="Grid">
+            <Setter Property="ColumnDefinitions" Value="*,Auto" />
+            <Setter Property="Padding" Value="0,14" />
+            <Setter Property="ColumnSpacing" Value="12" />
+           
+        </Style>
+
+        <!-- Разделитель -->
+        <Style x:Key="SeparatorStyle" TargetType="BoxView">
+            <Setter Property="HeightRequest" Value="1" />
+            <Setter Property="HorizontalOptions" Value="Fill" />
+            <Setter Property="BackgroundColor"
+                    Value="{AppThemeBinding Light={StaticResource Gray200}, Dark={StaticResource Gray600}}" />
+        </Style>
+
+    </ContentPage.Resources>
+
     <ScrollView>
-        <VerticalStackLayout Padding="20" Spacing="24">
+        <VerticalStackLayout Padding="16,24" Spacing="24">
 
             <!-- Профиль -->
-            <Frame Style="{StaticResource CardStyle}">
-                <VerticalStackLayout Spacing="{StaticResource LayoutSpacing}">
+            <Border BackgroundColor="{AppThemeBinding Light={StaticResource LightSecondaryBackground}, Dark={StaticResource DarkSecondaryBackground}}"
+                    StrokeThickness="0"
+                    StrokeShape="RoundRectangle 16"
+                    Padding="24,32">
+                <Border.Shadow>
+                    <Shadow Brush="{AppThemeBinding Light={StaticResource Gray300}, Dark={StaticResource Black}}"
+                            Opacity="0.10"
+                            Offset="0,4"
+                            Radius="10" />
+                </Border.Shadow>
 
-                    <!-- Имя -->
-                    <Label 
-            Text="{Binding FullName}"
-            Style="{StaticResource Title2}"
-            Margin="0,0,0,2" />
+                <VerticalStackLayout Spacing="16" HorizontalOptions="Center">
 
-                    <!-- Email -->
-                    <Label 
-            Text="{Binding ContactEmail}"
-            Style="{StaticResource Caption1}"
-            TextColor="{AppThemeBinding Light={StaticResource Gray600}, Dark={StaticResource Gray400}}"
-            Margin="0,0,0,10" />
+                    <!-- Аватар -->
+                    <Border WidthRequest="80"
+                            HeightRequest="80"
+                            StrokeThickness="0"
+                            StrokeShape="RoundRectangle 40"
+                            BackgroundColor="{StaticResource Primary}">
+                        <Label Text="{Binding Initials}"
+                               Style="{StaticResource Title1}"
+                               TextColor="White"
+                               HorizontalOptions="Center"
+                               VerticalOptions="Center" />
+                    </Border>
 
-                    <!-- Разделитель -->
-                    <BoxView 
-            HeightRequest="1"
-            BackgroundColor="{AppThemeBinding Light={StaticResource Gray200}, Dark={StaticResource Gray900}}"
-            HorizontalOptions="Fill"
-            Margin="0,0,0,10" />
+                    <Label Text="{Binding FullName}"
+                           Style="{StaticResource Title2}"
+                           HorizontalOptions="Center" />
 
-                    <!-- Кнопка редактирования -->
-                    <Button 
-            Text="Редактировать профиль"
-            Command="{Binding EditProfileCommand}"
-            Style="{StaticResource OutlineButton}"
-            HorizontalOptions="Center" />
+                    <Label Text="{Binding ContactEmail}"
+                           Style="{StaticResource Caption1}"
+                           TextColor="{AppThemeBinding Light={StaticResource Gray600}, Dark={StaticResource Gray400}}"
+                           HorizontalOptions="Center"
+                           Margin="0,-6,0,0" />
+
+                    <Button Text="Редактировать профиль"
+                            Command="{Binding EditProfileCommand}"
+                            Style="{StaticResource OutlineButton}"
+                            Margin="0,10,0,0" />
 
                 </VerticalStackLayout>
-            </Frame>
+            </Border>
 
 
+            <!-- Мои объявления -->
+            <Border BackgroundColor="{AppThemeBinding Light={StaticResource LightSecondaryBackground}, Dark={StaticResource DarkSecondaryBackground}}"
+                    StrokeShape="RoundRectangle 16"
+                    StrokeThickness="0"
+                    Padding="20,8">
 
-            <!-- Действия -->
-            <Frame Style="{StaticResource CardStyle}">
-                <Grid RowDefinitions="Auto,Auto" ColumnDefinitions="*,Auto" Padding="0" ColumnSpacing="16" RowSpacing="16">
+                <VerticalStackLayout>
 
-                    <!-- Заголовок на всю ширину -->
-                    <Label 
-            Grid.Row="0" Grid.ColumnSpan="2"
-            Text="Мои объявления"
-            Style="{StaticResource SectionTitleStyle}" />
+                    <Label Text="Мои объявления"
+                           Style="{StaticResource Title3}"
+                           Margin="0,8" />
 
-                    <!-- Вертикальный стек кнопок в первой колонке -->
-                    <VerticalStackLayout 
-            Grid.Row="1" Grid.Column="0"
-            Spacing="12">
+                    <!-- Добавить новое -->
+                    <Grid Style="{StaticResource MenuRowStyle}">
+                        <Grid.GestureRecognizers>
+                            <TapGestureRecognizer Command="{Binding CreateAdvertCommand}" />
+                        </Grid.GestureRecognizers>
 
-                        <Button 
-                Text="Черновики"
-                Style="{StaticResource ActionButton}"
-                Command="{Binding ShowDraftsCommand}" />
+                        <HorizontalStackLayout Spacing="12">
+                            <Image WidthRequest="24" HeightRequest="24">
+                                <Image.Source>
+                                    <FontImageSource Glyph="{x:Static f:FluentUI.add_24_regular}"
+                                                     FontFamily="{x:Static f:FluentUI.FontFamily}"
+                                                     Color="{StaticResource Primary}" />
+                                </Image.Source>
+                            </Image>
+                            <Label Text="Добавить новое" Style="{StaticResource Body1}" VerticalOptions="Center" />
+                        </HorizontalStackLayout>
 
-                        <Button 
-                Text="Опубликованные"
-                Style="{StaticResource ActionButton}"
-                Command="{Binding ShowPublishedCommand}" />
-                    </VerticalStackLayout>
+                        <Image Grid.Column="1" VerticalOptions="Center">
+                            <Image.Source>
+                                <FontImageSource Glyph="{x:Static f:FluentUI.chevron_right_24_regular}"
+                                                 FontFamily="{x:Static f:FluentUI.FontFamily}"
+                                                 Color="{AppThemeBinding Light={StaticResource Gray400}, Dark={StaticResource Gray600}}" />
+                            </Image.Source>
+                        </Image>
+                    </Grid>
 
-                    <!-- Кнопка Добавить во второй колонке, справа у края -->
-                    <controls:AddButton
-            Grid.Row="1" Grid.Column="1"
-            Command="{Binding CreateAdvertCommand}"
-            HorizontalOptions="End"
-            VerticalOptions="Start"/>
-                </Grid>
-            </Frame>
+                    <BoxView Style="{StaticResource SeparatorStyle}" />
+
+                    <!-- Черновики -->
+                    <Grid Style="{StaticResource MenuRowStyle}">
+                        <Grid.GestureRecognizers>
+                            <TapGestureRecognizer Command="{Binding ShowDraftsCommand}" />
+                        </Grid.GestureRecognizers>
+
+                        <HorizontalStackLayout Spacing="12">
+                            <Image WidthRequest="24" HeightRequest="24">
+                                <Image.Source>
+                                    <FontImageSource Glyph="{x:Static f:FluentUI.access_time_20_regular}"
+                                                     FontFamily="{x:Static f:FluentUI.FontFamily}"
+                                                     Color="{StaticResource Primary}" />
+                                </Image.Source>
+                            </Image>
+
+                            <Label Text="Черновики"
+                                   Style="{StaticResource Body1}"
+                                   VerticalOptions="Center" />
+                        </HorizontalStackLayout>
+
+                        <Label Grid.Column="1"
+                               Text="{Binding DraftsCount}"
+                               IsVisible="{Binding HasDrafts}"
+                               Style="{StaticResource Body1}"
+                               TextColor="{AppThemeBinding Light={StaticResource Gray600}, Dark={StaticResource Gray400}}"
+                               VerticalOptions="Center" />
+                    </Grid>
+
+                    <BoxView Style="{StaticResource SeparatorStyle}" />
+
+                    <!-- Опубликованные -->
+                    <Grid Style="{StaticResource MenuRowStyle}">
+                        <Grid.GestureRecognizers>
+                            <TapGestureRecognizer Command="{Binding ShowPublishedCommand}" />
+                        </Grid.GestureRecognizers>
+
+                        <HorizontalStackLayout Spacing="12">
+                            <Image WidthRequest="24" HeightRequest="24">
+                                <Image.Source>
+                                    <FontImageSource Glyph="{x:Static f:FluentUI.send_24_regular}"
+                                                     FontFamily="{x:Static f:FluentUI.FontFamily}"
+                                                     Color="{StaticResource Primary}" />
+                                </Image.Source>
+                            </Image>
+
+                            <Label Text="Опубликованные"
+                                   Style="{StaticResource Body1}"
+                                   VerticalOptions="Center" />
+                        </HorizontalStackLayout>
+
+                        <Label Grid.Column="1"
+                               Text="{Binding PublishedCount}"
+                               IsVisible="{Binding HasPublished}"
+                               Style="{StaticResource Body1}"
+                               TextColor="{AppThemeBinding Light={StaticResource Gray600}, Dark={StaticResource Gray400}}"
+                               VerticalOptions="Center" />
+                    </Grid>
+
+                </VerticalStackLayout>
+            </Border>
 
 
+            <!-- Настройки -->
+            <Border BackgroundColor="{AppThemeBinding Light={StaticResource LightSecondaryBackground}, Dark={StaticResource DarkSecondaryBackground}}"
+                    StrokeThickness="0"
+                    StrokeShape="RoundRectangle 16"
+                    Padding="20,8">
 
-            <!-- Цветовая тема -->
-            <Frame Style="{StaticResource CardStyle}">
-                <Grid ColumnDefinitions="*,Auto" Padding="0" VerticalOptions="Center">
+                <VerticalStackLayout>
 
-                    <!-- Текст слева -->
-                    <Label 
-            Text="Цветовая тема" 
-            Style="{StaticResource SectionTitleStyle}" 
-            VerticalOptions="Center"
-            Grid.Column="0"/>
+                    <Label Text="Настройки"
+                           Style="{StaticResource Title3}"
+                           Margin="0,8" />
 
-                    <!-- SegmentedControl справа -->
-                    <sf:SfSegmentedControl 
-            Grid.Column="1"
-            HorizontalOptions="End"
-            VerticalOptions="Center"
-            SegmentWidth="40"
-            SegmentHeight="40"
-            SelectedIndex="{Binding SelectedThemeIndex, Mode=TwoWay}">
-                        <sf:SfSegmentedControl.ItemsSource>
-                            <x:Array Type="{x:Type sf:SfSegmentItem}">
-                                <sf:SfSegmentItem ImageSource="{StaticResource IconLight}" SemanticProperties.Description="Light mode"/>
-                                <sf:SfSegmentItem ImageSource="{StaticResource IconDark}" SemanticProperties.Description="Dark mode"/>
-                            </x:Array>
-                        </sf:SfSegmentedControl.ItemsSource>
-                    </sf:SfSegmentedControl>
+                    <!-- Цветовая тема -->
+                    <Grid Style="{StaticResource MenuRowStyle}">
 
-                </Grid>
-            </Frame>
+                        <HorizontalStackLayout Spacing="12">
+                            <Image WidthRequest="24" HeightRequest="24">
+                                <Image.Source>
+                                    <FontImageSource Glyph="{x:Static f:FluentUI.dark_theme_24_regular}"
+                                                     FontFamily="{x:Static f:FluentUI.FontFamily}"
+                                                     Color="{StaticResource Primary}" />
+                                </Image.Source>
+                            </Image>
+
+                            <Label Text="Цветовая тема"
+                                   Style="{StaticResource Body1}"
+                                   VerticalOptions="Center" />
+                        </HorizontalStackLayout>
+
+                        <!-- Исправленный SegmentedControl -->
+                        <sf:SfSegmentedControl
+                            Grid.Column="1"
+                            HorizontalOptions="End"
+                            VerticalOptions="Center"
+                            SegmentWidth="44"
+                            SegmentHeight="44"
+                            CornerRadius="10"
+                            SelectedIndex="{Binding SelectedThemeIndex, Mode=TwoWay}">
+
+                            <sf:SfSegmentedControl.ItemsSource>
+                                <x:Array Type="{x:Type sf:SfSegmentItem}">
+
+                                    <sf:SfSegmentItem>
+                                        <sf:SfSegmentItem.ImageSource>
+                                            <FontImageSource Glyph="{x:Static f:FluentUI.weather_sunny_16_regular}"
+                                                             FontFamily="{x:Static f:FluentUI.FontFamily}"
+                                                             Color="{AppThemeBinding Light=Black, Dark=White}" />
+                                        </sf:SfSegmentItem.ImageSource>
+                                    </sf:SfSegmentItem>
+
+                                    <sf:SfSegmentItem>
+                                        <sf:SfSegmentItem.ImageSource>
+                                            <FontImageSource Glyph="{x:Static f:FluentUI.weather_moon_24_regular}"
+                                                             FontFamily="{x:Static f:FluentUI.FontFamily}"
+                                                             Color="{AppThemeBinding Light=Black, Dark=White}" />
+                                        </sf:SfSegmentItem.ImageSource>
+                                    </sf:SfSegmentItem>
+
+                                </x:Array>
+                            </sf:SfSegmentedControl.ItemsSource>
+                        </sf:SfSegmentedControl>
+
+                    </Grid>
+
+                    <BoxView Style="{StaticResource SeparatorStyle}" />
+
+                    <!-- Помощь -->
+                    <Grid Style="{StaticResource MenuRowStyle}">
+                        <Grid.GestureRecognizers>
+                            <TapGestureRecognizer Command="{Binding ShowHelpCommand}" />
+                        </Grid.GestureRecognizers>
+
+                        <HorizontalStackLayout Spacing="12">
+                            <Image WidthRequest="24" HeightRequest="24">
+                                <Image.Source>
+                                    <FontImageSource Glyph="{x:Static f:FluentUI.question_circle_24_regular}"
+                                                     FontFamily="{x:Static f:FluentUI.FontFamily}"
+                                                     Color="{StaticResource Primary}" />
+                                </Image.Source>
+                            </Image>
+
+                            <Label Text="Помощь и поддержка"
+                                   Style="{StaticResource Body1}" />
+                        </HorizontalStackLayout>
+                    </Grid>
+
+                    <BoxView Style="{StaticResource SeparatorStyle}" />
+
+                    <!-- О приложении -->
+                    <Grid Style="{StaticResource MenuRowStyle}">
+                        <Grid.GestureRecognizers>
+                            <TapGestureRecognizer Command="{Binding ShowAboutCommand}" />
+                        </Grid.GestureRecognizers>
+
+                        <HorizontalStackLayout Spacing="12">
+                            <Image WidthRequest="24" HeightRequest="24">
+                                <Image.Source>
+                                    <FontImageSource Glyph="{x:Static f:FluentUI.info_24_regular}"
+                                                     FontFamily="{x:Static f:FluentUI.FontFamily}"
+                                                     Color="{StaticResource Primary}" />
+                                </Image.Source>
+                            </Image>
+
+                            <Label Text="О приложении"
+                                   Style="{StaticResource Body1}" />
+                        </HorizontalStackLayout>
+                    </Grid>
+
+                </VerticalStackLayout>
+            </Border>
 
             <!-- Выход -->
-            <Button 
-                Text="Выйти"
-                Command="{Binding LogoutCommand}"
-                TextColor="Red"
-                Style="{StaticResource OutlineButton}" />
+            <Button Text="Выйти"
+                    Command="{Binding LogoutCommand}"
+                    Style="{StaticResource OutlineButton}"
+                    Margin="0,12,0,0" />
 
         </VerticalStackLayout>
     </ScrollView>

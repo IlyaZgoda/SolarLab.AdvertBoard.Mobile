@@ -2,170 +2,178 @@
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:pageModels="clr-namespace:SolarLab.AdvertBoard.Mobile.Presentation.PageModels"
+             xmlns:f="clr-namespace:Fonts"
+             xmlns:sf="clr-namespace:Syncfusion.Maui.Toolkit.TextInputLayout;assembly=Syncfusion.Maui.Toolkit"
              x:Class="SolarLab.AdvertBoard.Mobile.Presentation.Pages.RegisterPage"
              x:DataType="pageModels:RegisterPageModel"
-             Title="Регистрация">
-    
+             Title="Регистрация"
+             BackgroundColor="{AppThemeBinding Light={StaticResource LightBackground}, Dark={StaticResource DarkBackground}}">
+
     <Shell.BackButtonBehavior>
         <BackButtonBehavior Command="{Binding BackCommand}"/>
     </Shell.BackButtonBehavior>
-    
+
     <ScrollView>
-        <VerticalStackLayout Padding="24" Spacing="20" VerticalOptions="Center">
+        <VerticalStackLayout Padding="32, 40" Spacing="24" VerticalOptions="Center">
+
+            <!-- Логотип/Акцентная иконка (ЦВЕТНАЯ И БОЛЬШАЯ) -->
+            <Image HeightRequest="80"
+                   WidthRequest="80"
+                   HorizontalOptions="Center"
+                   Margin="0,0,0,10">
+                <Image.Source>
+                    <FontImageSource Glyph="{x:Static f:FluentUI.slide_text_person_24_regular}" 
+                                     FontFamily="{x:Static f:FluentUI.FontFamily}"
+                                     Size="80"
+                                     Color="{AppThemeBinding Light={StaticResource Primary}, Dark={StaticResource PrimaryDark}}"/>
+                </Image.Source>
+            </Image>
 
             <!-- Заголовок -->
             <Label Text="Создайте аккаунт" 
-                   FontSize="24" 
-                   FontAttributes="Bold"
+                   Style="{StaticResource Title1}"
                    HorizontalOptions="Center"
-                   TextColor="{AppThemeBinding Light={StaticResource DarkOnLightBackground}, Dark={StaticResource LightOnDarkBackground}}" />
+                   Margin="0,0,0,10"/>
 
-            <!-- Фамилия (обязательное) -->
-            <StackLayout>
-                <Label>
-                    <Label.FormattedText>
-                        <FormattedString>
-                            <Span Text="Фамилия " 
-                                  TextColor="{AppThemeBinding Light={StaticResource DarkOnLightBackground}, Dark={StaticResource LightOnDarkBackground}}" />
-                            <Span Text="*" TextColor="Red" />
-                        </FormattedString>
-                    </Label.FormattedText>
-                </Label>
-                <Entry Text="{Binding LastName}" 
-                       Placeholder="Введите фамилию"
-                       HeightRequest="50"
-                       BackgroundColor="{AppThemeBinding Light={StaticResource LightSecondaryBackground}, Dark={StaticResource DarkSecondaryBackground}}"
-                       TextColor="{AppThemeBinding Light={StaticResource DarkOnLightBackground}, Dark={StaticResource LightOnDarkBackground}}"
-                       PlaceholderColor="{AppThemeBinding Light={StaticResource Gray500}, Dark={StaticResource Gray400}}"
-                       CornerRadius="8"
-                       Padding="12"/>
-            </StackLayout>
+            <!-- Карточка формы -->
+            <Border Background="{AppThemeBinding Light={StaticResource LightBackground}, Dark={StaticResource DarkSecondaryBackground}}"
+                    StrokeThickness="0"
+                    Padding="24"
+                    StrokeShape="RoundRectangle 20">
 
-            <!-- Имя (обязательное) -->
-            <StackLayout>
-                <Label>
-                    <Label.FormattedText>
-                        <FormattedString>
-                            <Span Text="Имя " 
-                                  TextColor="{AppThemeBinding Light={StaticResource DarkOnLightBackground}, Dark={StaticResource LightOnDarkBackground}}" />
-                            <Span Text="*" TextColor="Red" />
-                        </FormattedString>
-                    </Label.FormattedText>
-                </Label>
-                <Entry Text="{Binding FirstName}" 
-                       Placeholder="Введите имя"
-                       HeightRequest="50"
-                       BackgroundColor="{AppThemeBinding Light={StaticResource LightSecondaryBackground}, Dark={StaticResource DarkSecondaryBackground}}"
-                       TextColor="{AppThemeBinding Light={StaticResource DarkOnLightBackground}, Dark={StaticResource LightOnDarkBackground}}"
-                       PlaceholderColor="{AppThemeBinding Light={StaticResource Gray500}, Dark={StaticResource Gray400}}"
-                       CornerRadius="8"
-                       Padding="12"/>
-            </StackLayout>
+                <Border.Shadow>
+                    <Shadow Brush="{AppThemeBinding Light={StaticResource Gray300}, Dark={StaticResource Black}}"
+                            Opacity="0.20"
+                            Offset="0,6"
+                            Radius="18" />
+                </Border.Shadow>
 
-            <!-- Отчество (необязательно) -->
-            <StackLayout>
-                <Label Text="Отчество"
-                       TextColor="{AppThemeBinding Light={StaticResource DarkOnLightBackground}, Dark={StaticResource LightOnDarkBackground}}" />
-                <Entry Text="{Binding MiddleName}" 
-                       Placeholder="Введите отчество"
-                       HeightRequest="50"
-                       BackgroundColor="{AppThemeBinding Light={StaticResource LightSecondaryBackground}, Dark={StaticResource DarkSecondaryBackground}}"
-                       TextColor="{AppThemeBinding Light={StaticResource DarkOnLightBackground}, Dark={StaticResource LightOnDarkBackground}}"
-                       PlaceholderColor="{AppThemeBinding Light={StaticResource Gray500}, Dark={StaticResource Gray400}}"
-                       CornerRadius="8"
-                       Padding="12"/>
-            </StackLayout>
+                <VerticalStackLayout Spacing="22">
 
-            <!-- Email для входа (обязательное) -->
-            <StackLayout>
-                <Label>
-                    <Label.FormattedText>
-                        <FormattedString>
-                            <Span Text="Email " 
-                                  TextColor="{AppThemeBinding Light={StaticResource DarkOnLightBackground}, Dark={StaticResource LightOnDarkBackground}}" />
-                            <Span Text="*" TextColor="Red" />
-                        </FormattedString>
-                    </Label.FormattedText>
-                </Label>
-                <Entry Text="{Binding Email}" 
-                       Placeholder="Введите Email"
-                       Keyboard="Email"
-                       HeightRequest="50"
-                       BackgroundColor="{AppThemeBinding Light={StaticResource LightSecondaryBackground}, Dark={StaticResource DarkSecondaryBackground}}"
-                       TextColor="{AppThemeBinding Light={StaticResource DarkOnLightBackground}, Dark={StaticResource LightOnDarkBackground}}"
-                       PlaceholderColor="{AppThemeBinding Light={StaticResource Gray500}, Dark={StaticResource Gray400}}"
-                       CornerRadius="8"
-                       Padding="12"/>
-            </StackLayout>
+                    <!-- Фамилия (обязательное) -->
+                    <sf:SfTextInputLayout 
+                        Stroke="{AppThemeBinding Light={StaticResource Primary}, Dark={StaticResource Gray400}}"
+                        Hint="Фамилия"
+                        HelperText="Обязательно *"
+                        ContainerType="Outlined"
+                        LeadingViewPosition="Inside"
+                        OutlineCornerRadius="12">
+                        <Entry Text="{Binding LastName}"
+                               Style="{StaticResource Body1}"
+                               TextColor="{AppThemeBinding Light={StaticResource DarkOnLightBackground}, Dark={StaticResource LightOnDarkBackground}}"/>
+                    </sf:SfTextInputLayout>
 
-            <!-- Контактный email (необязательно) -->
-            <StackLayout>
-                <Label Text="Контактный Email"
-                       TextColor="{AppThemeBinding Light={StaticResource DarkOnLightBackground}, Dark={StaticResource LightOnDarkBackground}}" />
-                <Entry Text="{Binding ContactEmail}" 
-                       Placeholder="Введите контактный email"
-                       Keyboard="Email"
-                       HeightRequest="50"
-                       BackgroundColor="{AppThemeBinding Light={StaticResource LightSecondaryBackground}, Dark={StaticResource DarkSecondaryBackground}}"
-                       TextColor="{AppThemeBinding Light={StaticResource DarkOnLightBackground}, Dark={StaticResource LightOnDarkBackground}}"
-                       PlaceholderColor="{AppThemeBinding Light={StaticResource Gray500}, Dark={StaticResource Gray400}}"
-                       CornerRadius="8"
-                       Padding="12"/>
-            </StackLayout>
+                    <!-- Имя (обязательное) -->
+                    <sf:SfTextInputLayout 
+                        Stroke="{AppThemeBinding Light={StaticResource Primary}, Dark={StaticResource Gray400}}"
+                        Hint="Имя"
+                        HelperText="Обязательно *"
+                        ContainerType="Outlined"
+                        LeadingViewPosition="Inside"
+                        OutlineCornerRadius="12">
+                        <Entry Text="{Binding FirstName}"
+                               Style="{StaticResource Body1}"
+                               TextColor="{AppThemeBinding Light={StaticResource DarkOnLightBackground}, Dark={StaticResource LightOnDarkBackground}}"/>
+                    </sf:SfTextInputLayout>
 
-            <!-- Телефон (необязательно) -->
-            <StackLayout>
-                <Label Text="Телефон"
-                       TextColor="{AppThemeBinding Light={StaticResource DarkOnLightBackground}, Dark={StaticResource LightOnDarkBackground}}" />
-                <Entry Text="{Binding PhoneNumber}" 
-                       Placeholder="Введите номер телефона"
-                       Keyboard="Telephone"
-                       HeightRequest="50"
-                       BackgroundColor="{AppThemeBinding Light={StaticResource LightSecondaryBackground}, Dark={StaticResource DarkSecondaryBackground}}"
-                       TextColor="{AppThemeBinding Light={StaticResource DarkOnLightBackground}, Dark={StaticResource LightOnDarkBackground}}"
-                       PlaceholderColor="{AppThemeBinding Light={StaticResource Gray500}, Dark={StaticResource Gray400}}"
-                       CornerRadius="8"
-                       Padding="12"/>
-            </StackLayout>
+                    <!-- Отчество (необязательно) -->
+                    <sf:SfTextInputLayout 
+                        Stroke="{AppThemeBinding Light={StaticResource Primary}, Dark={StaticResource Gray400}}"
+                        Hint="Отчество"
+                        ContainerType="Outlined"
+                        LeadingViewPosition="Inside"
+                        OutlineCornerRadius="12">
+                        <Entry Text="{Binding MiddleName}"
+                               Style="{StaticResource Body1}"
+                               TextColor="{AppThemeBinding Light={StaticResource DarkOnLightBackground}, Dark={StaticResource LightOnDarkBackground}}"/>
+                    </sf:SfTextInputLayout>
 
-            <!-- Пароль (обязательное) -->
-            <StackLayout>
-                <Label>
-                    <Label.FormattedText>
-                        <FormattedString>
-                            <Span Text="Пароль " 
-                                  TextColor="{AppThemeBinding Light={StaticResource DarkOnLightBackground}, Dark={StaticResource LightOnDarkBackground}}" />
-                            <Span Text="*" TextColor="Red" />
-                        </FormattedString>
-                    </Label.FormattedText>
-                </Label>
-                <Entry Text="{Binding Password}" 
-                       IsPassword="True"
-                       Placeholder="Введите пароль"
-                       HeightRequest="50"
-                       BackgroundColor="{AppThemeBinding Light={StaticResource LightSecondaryBackground}, Dark={StaticResource DarkSecondaryBackground}}"
-                       TextColor="{AppThemeBinding Light={StaticResource DarkOnLightBackground}, Dark={StaticResource LightOnDarkBackground}}"
-                       PlaceholderColor="{AppThemeBinding Light={StaticResource Gray500}, Dark={StaticResource Gray400}}"
-                       CornerRadius="8"
-                       Padding="12"/>
-            </StackLayout>
+                    <!-- Email для входа (обязательное) -->
+                    <sf:SfTextInputLayout 
+                        Stroke="{AppThemeBinding Light={StaticResource Primary}, Dark={StaticResource Gray400}}"
+                        Hint="Email"
+                        HelperText="Обязательно *"
+                        ContainerType="Outlined"
+                        LeadingViewPosition="Inside"
+                        OutlineCornerRadius="12">
+                        <Entry Text="{Binding Email}"
+                               Keyboard="Email"
+                               Style="{StaticResource Body1}"
+                               TextColor="{AppThemeBinding Light={StaticResource DarkOnLightBackground}, Dark={StaticResource LightOnDarkBackground}}"/>
+                    </sf:SfTextInputLayout>
+
+                    <!-- Контактный email (необязательно) -->
+                    <sf:SfTextInputLayout 
+                        Stroke="{AppThemeBinding Light={StaticResource Primary}, Dark={StaticResource Gray400}}"
+                        Hint="Контактный Email"
+                        ContainerType="Outlined"
+                        LeadingViewPosition="Inside"
+                        OutlineCornerRadius="12">
+                        <Entry Text="{Binding ContactEmail}"
+                               Keyboard="Email"
+                               Style="{StaticResource Body1}"
+                               TextColor="{AppThemeBinding Light={StaticResource DarkOnLightBackground}, Dark={StaticResource LightOnDarkBackground}}"/>
+                    </sf:SfTextInputLayout>
+
+                    <!-- Телефон (необязательно) -->
+                    <sf:SfTextInputLayout 
+                        Stroke="{AppThemeBinding Light={StaticResource Primary}, Dark={StaticResource Gray400}}"
+                        Hint="Телефон"
+                        ContainerType="Outlined"
+                        LeadingViewPosition="Inside"
+                        OutlineCornerRadius="12">
+                        <Entry Text="{Binding PhoneNumber}"
+                               Keyboard="Telephone"
+                               Style="{StaticResource Body1}"
+                               TextColor="{AppThemeBinding Light={StaticResource DarkOnLightBackground}, Dark={StaticResource LightOnDarkBackground}}"/>
+                    </sf:SfTextInputLayout>
+
+                    <!-- Пароль (обязательное) -->
+                    <sf:SfTextInputLayout 
+                        Stroke="{AppThemeBinding Light={StaticResource Primary}, Dark={StaticResource Gray400}}"
+                        Hint="Пароль"
+                        HelperText="Обязательно *"
+                        EnablePasswordVisibilityToggle="True"
+                        ContainerType="Outlined"
+                        LeadingViewPosition="Inside"
+                        OutlineCornerRadius="12">
+                        <Entry Text="{Binding Password}"
+                               IsPassword="True"
+                               Style="{StaticResource Body1}"
+                               TextColor="{AppThemeBinding Light={StaticResource DarkOnLightBackground}, Dark={StaticResource LightOnDarkBackground}}"/>
+                    </sf:SfTextInputLayout>
+
+                    <sf:SfTextInputLayout 
+    Stroke="{AppThemeBinding Light={StaticResource Primary}, Dark={StaticResource Gray400}}"
+    Hint="Пароль"
+                        HelperText="Подтвердите пароль*"
+    EnablePasswordVisibilityToggle="True"
+    ContainerType="Outlined"
+    LeadingViewPosition="Inside"
+    OutlineCornerRadius="12">
+                        <Entry Text="{Binding Password}"
+           IsPassword="True"
+           Style="{StaticResource Body1}"
+           TextColor="{AppThemeBinding Light={StaticResource DarkOnLightBackground}, Dark={StaticResource LightOnDarkBackground}}"/>
+                    </sf:SfTextInputLayout>
+
+                </VerticalStackLayout>
+            </Border>
 
             <!-- Кнопка Зарегистрироваться -->
             <Button Text="Зарегистрироваться"
                     Command="{Binding RegisterCommand}"
-                    HeightRequest="50"
-                    CornerRadius="8"
-                    BackgroundColor="{AppThemeBinding Light={StaticResource PrimaryColor}, Dark={StaticResource PrimaryColorDark}}"
-                    TextColor="White"
-                    FontAttributes="Bold" />
+                    Style="{StaticResource PrimaryButton}"
+                    Margin="0,16,0,0"/>
 
             <!-- Ссылка на вход -->
             <HorizontalStackLayout HorizontalOptions="Center" Spacing="5">
                 <Label Text="Уже есть аккаунт?"
-                       TextColor="{AppThemeBinding Light={StaticResource DarkOnLightBackground}, Dark={StaticResource LightOnDarkBackground}}" />
+                       Style="{StaticResource Body1}"
+                       TextColor="{AppThemeBinding Light={StaticResource Gray600}, Dark={StaticResource Gray400}}" />
                 <Label Text="Войти"
-                       TextColor="{AppThemeBinding Light={StaticResource PrimaryColor}, Dark={StaticResource PrimaryColorDark}}"
-                       FontAttributes="Bold">
+                       Style="{StaticResource Body1Strong}"
+                       TextColor="{AppThemeBinding Light={StaticResource Tertiary}, Dark={StaticResource Primary}}">
                     <Label.GestureRecognizers>
                         <TapGestureRecognizer Command="{Binding GoToLoginCommand}" />
                     </Label.GestureRecognizers>

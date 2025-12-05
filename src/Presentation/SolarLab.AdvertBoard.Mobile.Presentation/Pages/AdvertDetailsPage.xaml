@@ -1,86 +1,120 @@
+<?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
-             xmlns:pageModels="clr-namespace:SolarLab.AdvertBoard.Mobile.Presentation.PageModels"      
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:pageModels="clr-namespace:SolarLab.AdvertBoard.Mobile.Presentation.PageModels"
+             xmlns:f="clr-namespace:Fonts"
              x:Class="SolarLab.AdvertBoard.Mobile.Presentation.Pages.AdvertDetailsPage"
-             Title="Объявление">
+            
+             Title="Объявление"
+             BackgroundColor="{AppThemeBinding Light={StaticResource LightBackground}, Dark={StaticResource DarkBackground}}">
 
-    <CollectionView x:Name="MainCollectionView">
+    <ScrollView>
+        <VerticalStackLayout Spacing="16" Padding="16">
 
-        <CollectionView.Header>
-            <VerticalStackLayout Padding="16" Spacing="16">
+            <!-- Заголовок -->
+            <Label Text="{Binding Advert.Title}" Style="{StaticResource Title1}" LineBreakMode="TailTruncation"/>
 
-                <Label Text="{Binding Advert.Title}" FontSize="22" FontAttributes="Bold" />
+            <!-- Галерея изображений -->
+            <CarouselView ItemsSource="{Binding AdvertImages}" HeightRequest="280" HorizontalScrollBarVisibility="Never" IndicatorView="{x:Reference carouselIndicator}">
+                <CarouselView.ItemTemplate>
+                    <DataTemplate>
+                        <Border StrokeThickness="0" StrokeShape="RoundRectangle 16" Padding="0">
+                            <Border.Shadow>
+                                <Shadow Brush="{AppThemeBinding Light={StaticResource Gray300}, Dark={StaticResource Black}}"
+                                        Opacity="0.15" Offset="0,4" Radius="12"/>
+                            </Border.Shadow>
+                            <Image Source="{Binding .}" Aspect="AspectFill" HeightRequest="280" BackgroundColor="{AppThemeBinding Light={StaticResource LightSecondaryBackground}, Dark={StaticResource DarkSecondaryBackground}}"/>
+                        </Border>
+                    </DataTemplate>
+                </CarouselView.ItemTemplate>
+            </CarouselView>
+            <IndicatorView x:Name="carouselIndicator" HorizontalOptions="Center" Margin="0,-24,0,0"/>
 
-                <!-- Горизонтальная карусель -->
-                <CollectionView ItemsSource="{Binding AdvertImages}" HeightRequest="250" HorizontalScrollBarVisibility="Never">
-                    <CollectionView.ItemsLayout>
-                        <LinearItemsLayout Orientation="Horizontal" ItemSpacing="8"/>
-                    </CollectionView.ItemsLayout>
-                    <CollectionView.ItemTemplate>
-                        <DataTemplate>
-                            <Frame HasShadow="True" CornerRadius="8" Padding="0">
-                                <Image Source="{Binding .}" 
-                                       Aspect="AspectFill" 
-                                       WidthRequest="250" 
-                                       HeightRequest="250" 
-                                       BackgroundColor="LightGray"/>
-                            </Frame>
-                        </DataTemplate>
-                    </CollectionView.ItemTemplate>
-                </CollectionView>
-
-                <!-- Остальные элементы страницы -->
-                <Label Text="{Binding Advert.Price, StringFormat='{0:C0}'}" FontSize="20" FontAttributes="Bold" TextColor="#008000"/>
-                <Label Text="{Binding Advert.CategoryTitle}" FontSize="14" TextColor="#777"/>
-                <Label Text="{Binding Advert.Description}" FontSize="16" LineBreakMode="WordWrap"/>
-
-                <VerticalStackLayout>
-                    <Label Text="Контакты продавца" FontSize="16" FontAttributes="Bold"/>
-                    <Label Text="{Binding Advert.AuthorContacts.FullName}" />
-                    <Label Text="{Binding Advert.AuthorContacts.ContactEmail}" />
-                    <Label Text="{Binding Advert.AuthorContacts.PhoneNumber}" />
+            <!-- Цена и категория -->
+            <Border Background="{AppThemeBinding Light={StaticResource LightSecondaryBackground}, Dark={StaticResource DarkSecondaryBackground}}"
+                    StrokeThickness="0" Padding="16" StrokeShape="RoundRectangle 12">
+                <Border.Shadow>
+                    <Shadow Brush="{AppThemeBinding Light={StaticResource Gray300}, Dark={StaticResource Black}}" Opacity="0.10" Offset="0,4" Radius="10"/>
+                </Border.Shadow>
+                <VerticalStackLayout Spacing="4">
+                    <Label Text="{Binding Advert.Price, StringFormat='{0:C0}'}" Style="{StaticResource Title2}" TextColor="{StaticResource Primary}"/>
+                    <Label Text="{Binding Advert.CategoryTitle}" Style="{StaticResource Body1}" TextColor="{AppThemeBinding Light={StaticResource Gray600}, Dark={StaticResource Gray400}}"/>
                 </VerticalStackLayout>
+            </Border>
 
-                <Label Text="{Binding Advert.CommentsCount, StringFormat='Комментариев: {0}'}"
-                       FontSize="14" TextColor="#777"/>
+            <!-- Описание -->
+            <Border Background="{AppThemeBinding Light={StaticResource LightSecondaryBackground}, Dark={StaticResource DarkSecondaryBackground}}"
+                    StrokeThickness="0" Padding="16" StrokeShape="RoundRectangle 12">
+                <Border.Shadow>
+                    <Shadow Brush="{AppThemeBinding Light={StaticResource Gray300}, Dark={StaticResource Black}}" Opacity="0.10" Offset="0,4" Radius="10"/>
+                </Border.Shadow>
+                <VerticalStackLayout Spacing="8">
+                    <Label Text="Описание" Style="{StaticResource Body1Strong}" />
+                    <Label Text="{Binding Advert.Description}" Style="{StaticResource Body1}" LineBreakMode="WordWrap"/>
+                </VerticalStackLayout>
+            </Border>
 
-                <!-- Кнопка показать/скрыть (только если есть комментарии) -->
-                <Button Text="{Binding ToggleCommentsButtonText}"
-                        Command="{Binding ToggleCommentsCommand}"
-                        IsVisible="{Binding ShowToggleCommentsButton}" />
+            <!-- Контакты продавца -->
+            <Border Background="{AppThemeBinding Light={StaticResource LightSecondaryBackground}, Dark={StaticResource DarkSecondaryBackground}}"
+                    StrokeThickness="0" Padding="16" StrokeShape="RoundRectangle 12">
+                <Border.Shadow>
+                    <Shadow Brush="{AppThemeBinding Light={StaticResource Gray300}, Dark={StaticResource Black}}" Opacity="0.10" Offset="0,4" Radius="10"/>
+                </Border.Shadow>
+                <VerticalStackLayout Spacing="12">
+                    <Label Text="Контакты продавца" Style="{StaticResource Title3}" />
 
-                <!-- Контейнер для анимации комментариев -->
-                <Grid x:Name="CommentsContainer"
-                      IsVisible="{Binding CommentsVisible}"
-                      Opacity="0"
-                      ScaleY="0"
-                      AnchorY="0">
-                    <CollectionView ItemsSource="{Binding Comments}"
-                                    HeightRequest="300">
-                        <CollectionView.ItemTemplate>
-                            <DataTemplate>
-                                <Frame CornerRadius="8" Padding="8" Margin="0,4" BackgroundColor="#eee">
-                                    <VerticalStackLayout>
-                                        <Label Text="{Binding FullName}" FontAttributes="Bold"/>
-                                        <Label Text="{Binding Text}" LineBreakMode="WordWrap"/>
-                                        <Label Text="{Binding CreatedAt, StringFormat='{0:dd.MM.yyyy HH:mm}'}"
-                                               FontSize="12" TextColor="#666"/>
-                                    </VerticalStackLayout>
-                                </Frame>
-                            </DataTemplate>
-                        </CollectionView.ItemTemplate>
-                    </CollectionView>
-                </Grid>
+                    <!-- Полное имя -->
+                    <HorizontalStackLayout Spacing="8">
+                        <Image Source="{x:Static f:FluentUI.person_24_regular}" HeightRequest="20" WidthRequest="20"/>
+                        <Label Text="{Binding Advert.AuthorContacts.FullName}" Style="{StaticResource Body1}"/>
+                    </HorizontalStackLayout>
 
-                <!-- Кнопка оставить комментарий -->
-                <Button Text="Добавить комментарий"
-                        IsEnabled="False"
-                        Margin="0,8,0,0"
-                        IsVisible="{Binding AddCommentVisible}" />
+                    <!-- Email -->
+                    <HorizontalStackLayout Spacing="8">
+                        <Image Source="{x:Static f:FluentUI.mail_24_regular}" HeightRequest="20" WidthRequest="20"/>
+                        <Label Text="{Binding Advert.AuthorContacts.ContactEmail}" Style="{StaticResource Body1Strong}" TextColor="{AppThemeBinding Light={StaticResource Tertiary}, Dark={StaticResource Primary}}">
+                            <Label.GestureRecognizers>
+                                <TapGestureRecognizer Command="{Binding EmailCommand}" CommandParameter="{Binding Advert.AuthorContacts.ContactEmail}"/>
+                            </Label.GestureRecognizers>
+                        </Label>
+                    </HorizontalStackLayout>
 
-            </VerticalStackLayout>
-        </CollectionView.Header>
+                    <!-- Телефон -->
+                    <HorizontalStackLayout Spacing="8">
+                        <Image Source="{x:Static f:FluentUI.call_24_regular}" HeightRequest="20" WidthRequest="20"/>
+                        <Label Text="{Binding Advert.AuthorContacts.PhoneNumber}" Style="{StaticResource Body1Strong}" TextColor="{AppThemeBinding Light={StaticResource Tertiary}, Dark={StaticResource Primary}}">
+                            <Label.GestureRecognizers>
+                                <TapGestureRecognizer Command="{Binding CallCommand}" CommandParameter="{Binding Advert.AuthorContacts.PhoneNumber}"/>
+                            </Label.GestureRecognizers>
+                        </Label>
+                    </HorizontalStackLayout>
+                </VerticalStackLayout>
+            </Border>
 
-    </CollectionView>
+            <!-- Комментарии -->
+            <HorizontalStackLayout HorizontalOptions="Fill" Spacing="10">
+                <Label Text="{Binding Advert.CommentsCount, StringFormat='Комментариев: {0}'}" Style="{StaticResource Title3}" VerticalOptions="Center"/>
+                <Button Text="{Binding ToggleCommentsButtonText}" Command="{Binding ToggleCommentsCommand}" IsVisible="{Binding ShowToggleCommentsButton}" Style="{StaticResource SecondaryButton}" HorizontalOptions="End"/>
+            </HorizontalStackLayout>
 
+            <CollectionView ItemsSource="{Binding Comments}" IsVisible="{Binding CommentsVisible}" Margin="0,8,0,0">
+                <CollectionView.ItemTemplate>
+                    <DataTemplate>
+                        <Border StrokeShape="RoundRectangle 10" StrokeThickness="1" Stroke="{AppThemeBinding Light={StaticResource Gray300}, Dark={StaticResource Gray700}}" Padding="12" Margin="0,4" BackgroundColor="{AppThemeBinding Light={StaticResource LightSecondaryBackground}, Dark={StaticResource DarkTertiaryBackground}}">
+                            <VerticalStackLayout Spacing="4">
+                                <HorizontalStackLayout Spacing="8">
+                                    <Label Text="{Binding FullName}" Style="{StaticResource Body2Strong}"/>
+                                    <Label Text="{Binding CreatedAt, StringFormat='{0:dd.MM.yyyy HH:mm}'}" Style="{StaticResource Caption}" TextColor="{AppThemeBinding Light={StaticResource Gray500}, Dark={StaticResource Gray400}}"/>
+                                </HorizontalStackLayout>
+                                <Label Text="{Binding Text}" Style="{StaticResource Body2}" LineBreakMode="WordWrap"/>
+                            </VerticalStackLayout>
+                        </Border>
+                    </DataTemplate>
+                </CollectionView.ItemTemplate>
+            </CollectionView>
+
+            <!-- Кнопка добавить комментарий -->
+            <Button Text="Добавить комментарий" Command="{Binding AddCommentCommand}" Margin="0,8,0,16" IsVisible="{Binding AddCommentVisible}" Style="{StaticResource PrimaryButton}"/>
+        </VerticalStackLayout>
+    </ScrollView>
 </ContentPage>

@@ -2,53 +2,62 @@
 <ContentView xmlns="http://schemas.microsoft.com/dotnet/2021/maui"  
              xmlns:contracts="clr-namespace:SolarLab.AdvertBoard.Mobile.Contracts.Adverts;assembly=SolarLab.AdvertBoard.Mobile.Contracts"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             xmlns:pageModels="clr-namespace:SolarLab.AdvertBoard.Mobile.Presentation.PageModels"   
              x:Class="SolarLab.AdvertBoard.Mobile.Presentation.Pages.Controls.Adverts.AdvertListItemView"
              x:DataType="contracts:PublishedAdvertItem">
-    <Border
-         Padding="12"
-         StrokeThickness="0"
-         StrokeShape="RoundRectangle 12"
-         Background="{AppThemeBinding Light=White, Dark=#1E1E1E}"
-         Margin="0,0,0,12">
 
+    <Border Style="{StaticResource CardStyle}"
+            Margin="0,0,0,12">
 
-        <Grid RowDefinitions="Auto,Auto,Auto" ColumnDefinitions="*,Auto">
+        <Grid RowDefinitions="Auto,Auto,Auto" ColumnDefinitions="*,Auto" RowSpacing="6">
 
-            
             <Label Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2"
-                Text="{Binding Title}"
-                FontSize="18"
-                FontAttributes="Bold"
-                TextColor="{AppThemeBinding Light=Black, Dark=White}" />
+                   Text="{Binding Title}"
+                   Style="{StaticResource Body1Strong}"
+                   TextColor="{AppThemeBinding Light={StaticResource DarkOnLightBackground}, Dark={StaticResource LightOnDarkBackground}}" />
 
             <Label Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2"
-                 Text="{Binding Description}"
-                 FontSize="14"
-                 LineBreakMode="TailTruncation"
-                 MaxLines="3"
-                 TextColor="{AppThemeBinding Light=Gray, Dark=#CCCCCC}"
-                 Margin="0,6,0,0" />
+                   Text="{Binding Description}"
+                   Style="{StaticResource Caption1}"
+                   LineBreakMode="TailTruncation"
+                   MaxLines="3"
+                   TextColor="{AppThemeBinding Light={StaticResource Gray600}, Dark={StaticResource Gray400}}" />
 
-            <!-- Цена + категория + доп. инфо -->
-            <HorizontalStackLayout Grid.Row="2" Grid.Column="0" Spacing="12" VerticalOptions="Center" Margin="0,6,0,0">
-                <Label Text="{Binding Price, StringFormat='{0:C0}'}"
-                     FontAttributes="Bold"
-                     FontSize="14"
-                     TextColor="{AppThemeBinding Light=Black, Dark=White}" WidthRequest="100"/>
+            <Grid Grid.Row="2" ColumnDefinitions="Auto,*,Auto" Margin="0,6,0,0" VerticalOptions="Center">
 
-                <Label Text="{Binding CategoryName}"
-                     FontSize="14"
-                     TextColor="{AppThemeBinding Light=#666, Dark=#AAAAAA}" />
-            </HorizontalStackLayout>
+                <Label Grid.Column="0"
+                       Text="{Binding Price, StringFormat='{0:C0}'}"
+                       Style="{StaticResource Body1Strong}"
+                       TextColor="{AppThemeBinding Light={StaticResource PriceLight}, Dark={StaticResource PriceDark}}" 
+                       VerticalOptions="Center"/>
 
-            <!-- Дата и кол-во комментариев справа -->
-            <Label Grid.Row="2" Grid.Column="1"
-                 Text="{Binding PublishedAt, StringFormat='{0:M}'}"
-                 FontSize="12"
-                 VerticalOptions="End"
-                 HorizontalOptions="End"
-                 TextColor="{AppThemeBinding Light=#999, Dark=#888}" />
+                <Border Grid.Column="1"
+                        HorizontalOptions="Start"
+                        VerticalOptions="Center"
+                        StrokeShape="RoundRectangle 8"  
+                        StrokeThickness="1"
+                        Margin="12,0,0,0"
+                        Padding="8,4" 
+                        Background="Transparent"
+                        
+                        Stroke="{AppThemeBinding Light={StaticResource CategoryBorderLight}, Dark={StaticResource CategoryBorderDark}}">
+
+                    <Label Text="{Binding CategoryName}"
+                           Style="{StaticResource Caption1Strong}"
+                           
+                           TextColor="{AppThemeBinding Light={StaticResource CategoryTextLight}, Dark={StaticResource CategoryTextDark}}" 
+                           VerticalOptions="Center"
+                           HorizontalOptions="Start"/>
+                </Border>
+
+                <Label Grid.Column="2"
+                       Text="{Binding PublishedAt, StringFormat='{0:M}'}"
+                       Style="{StaticResource Caption2}"
+                       VerticalOptions="Center"
+                       HorizontalOptions="End"
+                       
+                       TextColor="{AppThemeBinding Light={StaticResource Gray500}, Dark={StaticResource Gray400}}" />
+
+            </Grid>
         </Grid>
     </Border>
 </ContentView>

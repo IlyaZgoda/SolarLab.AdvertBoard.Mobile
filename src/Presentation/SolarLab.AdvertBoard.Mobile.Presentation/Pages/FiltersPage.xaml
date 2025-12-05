@@ -1,47 +1,46 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:local="clr-namespace:SolarLab.AdvertBoard.Mobile.Presentation.PageModels"
              xmlns:filters="clr-namespace:SolarLab.AdvertBoard.Mobile.Presentation.Pages.Controls.Filters"
-             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="SolarLab.AdvertBoard.Mobile.Presentation.Pages.FiltersPage"
              x:DataType="local:FiltersPageModel"
+             BackgroundColor="{AppThemeBinding Light={StaticResource LightBackground}, Dark={StaticResource DarkBackground}}"
              Title="Фильтры">
-    
-
 
     <ContentPage.ToolbarItems>
         <ToolbarItem Text="Сбросить"
                      Command="{Binding ResetFiltersCommand}"
-                     Order="Primary"
                      Priority="0"
-                     IsEnabled="{Binding HasActiveFilters}" />
+                     Order="Primary"
+                     IsEnabled="{Binding HasActiveFilters}"/>
     </ContentPage.ToolbarItems>
-    
-    <Grid RowDefinitions="Auto,*,Auto" Padding="16" Margin="0,12,0,0">
 
-        <!-- Хлебные крошки (фиксированная сверху) -->
-        <filters:FilterCategoryBreadcrumbView Grid.Row="0" Margin="0,0,0,12" />
+    <Grid RowDefinitions="Auto,*,Auto"
+          Padding="16"
+          RowSpacing="16">
 
-        <!-- ScrollView с категориями и фильтрами -->
+        <!-- Хлебные крошки -->
+        <filters:FilterCategoryBreadcrumbView Grid.Row="0"/>
+
+        <!-- Все фильтры -->
         <ScrollView Grid.Row="1">
-            <VerticalStackLayout Spacing="24">
+            <VerticalStackLayout Spacing="20">
                 <filters:CategoryLevelSelectorView />
                 <filters:PriceFilterView />
                 <filters:SortFilterView />
-                <!-- Можно добавить другие фильтры сюда -->
             </VerticalStackLayout>
         </ScrollView>
 
-        <!-- Кнопка Применить приклеена к низу -->
+        <!-- Кнопка снизу -->
         <Button Grid.Row="2"
-            Text="Применить"
-            Command="{Binding ApplyCommand}"
-            HeightRequest="48"
-            CornerRadius="12"
-            BackgroundColor="{StaticResource Primary}"
-            TextColor="White"
-            HorizontalOptions="Fill"/>
+                Text="Применить"
+                Command="{Binding ApplyCommand}"
+                HeightRequest="54"
+                CornerRadius="14"
+                BackgroundColor="{StaticResource Primary}"
+                TextColor="White"
+                FontAttributes="Bold"/>
     </Grid>
-
 
 </ContentPage>

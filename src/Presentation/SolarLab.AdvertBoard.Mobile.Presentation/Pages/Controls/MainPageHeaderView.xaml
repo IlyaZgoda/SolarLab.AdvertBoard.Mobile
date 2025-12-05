@@ -1,18 +1,21 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <ContentView xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:f="clr-namespace:Fonts"
+             xmlns:sf="clr-namespace:Syncfusion.Maui.Toolkit.TextInputLayout;assembly=Syncfusion.Maui.Toolkit"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="SolarLab.AdvertBoard.Mobile.Presentation.Pages.Controls.MainPageHeaderView"
              xmlns:pageModels="clr-namespace:SolarLab.AdvertBoard.Mobile.Presentation.PageModels"  
              x:DataType="pageModels:MainPageModel">
     <!--Row 0: Шапка-->
-    <Grid Grid.Row="0"  ColumnDefinitions="Auto,*,Auto,Auto" ColumnSpacing="{StaticResource LayoutSpacing}" BackgroundColor="Transparent">
+    <Grid ColumnDefinitions="Auto,*,Auto" ColumnSpacing="{StaticResource LayoutSpacing}" BackgroundColor="Transparent">
         <Grid.GestureRecognizers>
             <TapGestureRecognizer Tapped="OnBackgroundTapped"/>
         </Grid.GestureRecognizers>
 
         <!--Логотип-->
-        <Label Text="AdvertBoard"
+        <Label Text="AdvertBoard" Grid.Column="0"
             Style="{StaticResource Title2}"
+               TextColor="{AppThemeBinding Light={StaticResource Black}, Dark={StaticResource White}}"
             VerticalOptions="Center"/>
 
         <!--Поисковая строка-->
@@ -21,9 +24,9 @@
              StrokeThickness="0"
              Background="{AppThemeBinding Light={StaticResource LightSecondaryBackground}, Dark={StaticResource DarkSecondaryBackground}}"
              VerticalOptions="Center"
-             HorizontalOptions="Start"
+             HorizontalOptions="Fill"
              HeightRequest="40" 
-             WidthRequest="180">
+             >
             <Grid ColumnDefinitions="Auto,*,Auto" ColumnSpacing="{StaticResource LayoutSpacing}">
 
                 <!--Иконка поиска-->
@@ -68,36 +71,42 @@
         </Border>
 
         <!-- Кнопка Войти -->
-        <Button Grid.Column="3"
-            Text="Войти"
-            BackgroundColor="Transparent"
-            TextColor="{AppThemeBinding Light={StaticResource DarkOnLightBackground}, Dark={StaticResource LightOnDarkBackground}}"
-            FontAttributes="Bold"
-            VerticalOptions="Center"
-            Command="{Binding LoginCommand}">
+        <Button Grid.Column="2"
+                Text="Войти"
+                Style="{StaticResource PrimaryButton}" 
+                TextColor="AliceBlue"
+                Command="{Binding LoginCommand}"
+                Padding="5,5" 
+                MinimumWidthRequest="60"
+                HeightRequest="40">
             <Button.Triggers>
                 <DataTrigger TargetType="Button"
-                         Binding="{Binding IsUserAuthenticated}"
-                         Value="True">
+                             Binding="{Binding IsUserAuthenticated}"
+                             Value="True">
                     <Setter Property="IsVisible" Value="False" />
                 </DataTrigger>
             </Button.Triggers>
         </Button>
 
         <!-- Иконка профиля -->
-        <Image Grid.Column="3"
-           Source="{StaticResource IconProfile}"
-           HeightRequest="32"
-           WidthRequest="32"
-           VerticalOptions="Center"
-               Margin="0,0,10,0">
+
+        <Image Grid.Column="2">
+            <Image.Source>
+                <FontImageSource 
+                Glyph="{x:Static f:FluentUI.person_circle_24_regular}"
+                FontFamily="{x:Static f:FluentUI.FontFamily}"
+                Size="44"
+                Color="{AppThemeBinding 
+                        Light={StaticResource Primary}, 
+                        Dark={StaticResource PrimaryDark}}" />
+            </Image.Source>
             <Image.GestureRecognizers>
                 <TapGestureRecognizer Command="{Binding OpenProfileCommand}" />
             </Image.GestureRecognizers>
             <Image.Triggers>
                 <DataTrigger TargetType="Image"
-                         Binding="{Binding IsUserAuthenticated}"
-                         Value="False">
+              Binding="{Binding IsUserAuthenticated}"
+              Value="False">
                     <Setter Property="IsVisible" Value="False" />
                 </DataTrigger>
             </Image.Triggers>

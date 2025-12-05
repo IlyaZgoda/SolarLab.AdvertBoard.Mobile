@@ -20,5 +20,10 @@
                 <adverts:DraftListItemView />
             </DataTemplate>
         </CollectionView.ItemTemplate>
+
+        <!-- Отступ внизу -->
+        <CollectionView.Footer>
+            <BoxView HeightRequest="20" BackgroundColor="Transparent"/>
+        </CollectionView.Footer>
     </CollectionView>
 </ContentView>

@@ -5,80 +5,166 @@
     xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
     xmlns:sf="clr-namespace:Syncfusion.Maui.Toolkit.TextInputLayout;assembly=Syncfusion.Maui.Toolkit"
+    xmlns:f="clr-namespace:Fonts"
     BackgroundColor="{AppThemeBinding Light={StaticResource LightBackground}, Dark={StaticResource DarkBackground}}"
     Title="Редактирование профиля"
     x:DataType="pageModels:EditProfilePageModel">
 
     <ScrollView>
-        <VerticalStackLayout Padding="{StaticResource LayoutPadding}" Spacing="{StaticResource LayoutSpacing}">
+        <!-- Общий контейнер с отступами, как на странице профиля -->
+        <VerticalStackLayout Padding="16, 24, 16, 24" Spacing="24">
 
-            <!-- Имя -->
-            <sf:SfTextInputLayout Hint="Имя"
-                                  IsHintAlwaysFloated="True"
-                                  ContainerType="Outlined"
-                                  Stroke="{AppThemeBinding Light={StaticResource Primary}, Dark={StaticResource Primary}}"
-                                  HintLabelStyle="{AppThemeBinding Light={StaticResource Body1}, Dark={StaticResource Body1}}"
-                                  OutlineCornerRadius="12"
-                                  Margin="0,0,0,10">
-                <Entry Text="{Binding FirstName, Mode=TwoWay}"
-                       TextColor="{AppThemeBinding Light={StaticResource DarkOnLightBackground}, Dark={StaticResource LightOnDarkBackground}}"/>
-            </sf:SfTextInputLayout>
+            <!-- 1. Секция Аватара с возможностью редактирования -->
+            <VerticalStackLayout Spacing="16" HorizontalOptions="Center">
 
-            <!-- Фамилия -->
-            <sf:SfTextInputLayout Hint="Фамилия"
-                                  IsHintAlwaysFloated="True"
-                                  ContainerType="Outlined"
-                                  Stroke="{AppThemeBinding Light={StaticResource Primary}, Dark={StaticResource Primary}}"
-                                  HintLabelStyle="{AppThemeBinding Light={StaticResource Body1}, Dark={StaticResource Body1}}"
-                                  OutlineCornerRadius="12"
-                                  Margin="0,0,0,10">
-                <Entry Text="{Binding LastName, Mode=TwoWay}"
-                       TextColor="{AppThemeBinding Light={StaticResource DarkOnLightBackground}, Dark={StaticResource LightOnDarkBackground}}"/>
-            </sf:SfTextInputLayout>
+                <!-- Аватар (Используем Border как в ProfilePage) -->
+                <Grid WidthRequest="100" 
+                      HeightRequest="100"
+                      HorizontalOptions="Center"
+                      VerticalOptions="Center">
 
-            <!-- Отчество -->
-            <sf:SfTextInputLayout Hint="Отчество"
-                                  IsHintAlwaysFloated="True"
-                                  ContainerType="Outlined"
-                                  Stroke="{AppThemeBinding Light={StaticResource Primary}, Dark={StaticResource Primary}}"
-                                  HintLabelStyle="{AppThemeBinding Light={StaticResource Body1}, Dark={StaticResource Body1}}"
-                                  OutlineCornerRadius="12"
-                                  Margin="0,0,0,10">
-                <Entry Text="{Binding MiddleName, Mode=TwoWay}"
-                       TextColor="{AppThemeBinding Light={StaticResource DarkOnLightBackground}, Dark={StaticResource LightOnDarkBackground}}"/>
-            </sf:SfTextInputLayout>
+                    <!-- Основной круговой Border для инициалов/фото -->
+                    <Border Grid.Row="0" Grid.Column="0"
+                            WidthRequest="100" 
+                            HeightRequest="100"
+                            StrokeShape="RoundRectangle 50"
+                            StrokeThickness="0"
+                            BackgroundColor="{StaticResource Primary}"
+                            VerticalOptions="Center"
+                            HorizontalOptions="Center">
+                        <Label Text="{Binding Initials}" 
+                               Style="{StaticResource Title1}"
+                               TextColor="White"
+                               HorizontalOptions="Center"
+                               VerticalOptions="Center"/>
+                    </Border>
 
-            <!-- Контактная почта -->
-            <sf:SfTextInputLayout Hint="Контактная почта"
-                                  IsHintAlwaysFloated="True"
-                                  ContainerType="Outlined"
-                                  Stroke="{AppThemeBinding Light={StaticResource Primary}, Dark={StaticResource Primary}}"
-                                  HintLabelStyle="{AppThemeBinding Light={StaticResource Body1}, Dark={StaticResource Body1}}"
-                                  OutlineCornerRadius="12"
-                                  Margin="0,0,0,10">
-                <Entry Text="{Binding ContactEmail, Mode=TwoWay}"
-                       Keyboard="Email"
-                       TextColor="{AppThemeBinding Light={StaticResource DarkOnLightBackground}, Dark={StaticResource LightOnDarkBackground}}"/>
-            </sf:SfTextInputLayout>
+                    <!-- Кнопка/Иконка редактирования (накладывается сверху) -->
+                    <Border Grid.Row="0" Grid.Column="0"
+                            WidthRequest="32" 
+                            HeightRequest="32"
+                            StrokeShape="RoundRectangle 16"
+                            StrokeThickness="0"
+                            HorizontalOptions="End"
+                            VerticalOptions="End"
+                            Margin="0, 0, -4, -4">
+                        <!-- Сдвиг для лучшего позиционирования -->
+                        <Border.GestureRecognizers>
+                            <TapGestureRecognizer Command="{Binding ChangeAvatarCommand}" />
+                        </Border.GestureRecognizers>
+                        <Image Source="{FontImageSource Glyph={x:Static f:FluentUI.camera_24_regular}, 
+                                                         FontFamily={x:Static f:FluentUI.FontFamily}, 
+                                                         Color=White, 
+                                                         Size=18}" 
+                               HeightRequest="18" WidthRequest="18"/>
+                    </Border>
+                </Grid>
+
+                <Label Text="Изменить фото профиля"
+                       Style="{StaticResource Caption1}"
+                       TextColor="{StaticResource Primary}"
+                       Margin="0, -10, 0, 0"/>
+
+                <BoxView HeightRequest="1" Color="Transparent" Margin="0, 0, 0, 10"/>
+                <!-- Дополнительный отступ -->
+            </VerticalStackLayout>
 
 
-            <!-- Телефон -->
-            <sf:SfTextInputLayout Hint="Телефон"
-                                  IsHintAlwaysFloated="True"
-                                  ContainerType="Outlined"
-                                  Stroke="{AppThemeBinding Light={StaticResource Primary}, Dark={StaticResource Primary}}"
-                                  HintLabelStyle="{AppThemeBinding Light={StaticResource Body1}, Dark={StaticResource Body1}}"
-                                  OutlineCornerRadius="12"
-                                  Margin="0,0,0,20">
-                <Entry Text="{Binding Phone, Mode=TwoWay}"
-                       Keyboard="Telephone"
-                       TextColor="{AppThemeBinding Light={StaticResource DarkOnLightBackground}, Dark={StaticResource LightOnDarkBackground}}"/>
-            </sf:SfTextInputLayout>
+            <!-- 2. Карточка с полями ввода (Данные пользователя) -->
+            <Border BackgroundColor="{AppThemeBinding Light={StaticResource LightSecondaryBackground}, Dark={StaticResource DarkSecondaryBackground}}"
+                    StrokeShape="RoundRectangle 16"
+                    StrokeThickness="0"
+                    Padding="20, 24">
+                <Border.Shadow>
+                    <Shadow Brush="{AppThemeBinding Light={StaticResource Gray300}, Dark={StaticResource Black}}"
+                            Opacity="0.10"
+                            Offset="0,4"
+                            Radius="10" />
+                </Border.Shadow>
 
-            <!-- Кнопки -->
-            <HorizontalStackLayout Spacing="12" HorizontalOptions="Center">
-                <Button Text="Отмена" Style="{StaticResource ActionButton}" Command="{Binding CancelCommand}" WidthRequest="150"/>
-                <Button Text="Сохранить" Style="{StaticResource PrimaryButton}" Command="{Binding SaveCommand}" WidthRequest="150"/>
+                <VerticalStackLayout Spacing="20">
+
+                    <!-- Имя -->
+                    <sf:SfTextInputLayout Hint="Имя"
+                                          IsHintAlwaysFloated="True"
+                                          ContainerType="Outlined"
+                                          Stroke="{AppThemeBinding Light={StaticResource Primary}, Dark={StaticResource Primary}}"
+                                          HintLabelStyle="{StaticResource Body1}"
+                                          OutlineCornerRadius="12">
+                        <Entry Text="{Binding FirstName, Mode=TwoWay}"
+                               TextColor="{AppThemeBinding Light={StaticResource DarkOnLightBackground}, Dark={StaticResource LightOnDarkBackground}}"/>
+                    </sf:SfTextInputLayout>
+
+                    <!-- Фамилия -->
+                    <sf:SfTextInputLayout Hint="Фамилия"
+                                          IsHintAlwaysFloated="True"
+                                          ContainerType="Outlined"
+                                          Stroke="{AppThemeBinding Light={StaticResource Primary}, Dark={StaticResource Primary}}"
+                                          HintLabelStyle="{StaticResource Body1}"
+                                          OutlineCornerRadius="12">
+                        <Entry Text="{Binding LastName, Mode=TwoWay}"
+                               TextColor="{AppThemeBinding Light={StaticResource DarkOnLightBackground}, Dark={StaticResource LightOnDarkBackground}}"/>
+                    </sf:SfTextInputLayout>
+
+                    <!-- Отчество -->
+                    <sf:SfTextInputLayout Hint="Отчество"
+                                          IsHintAlwaysFloated="True"
+                                          ContainerType="Outlined"
+                                          Stroke="{AppThemeBinding Light={StaticResource Primary}, Dark={StaticResource Primary}}"
+                                          HintLabelStyle="{StaticResource Body1}"
+                                          OutlineCornerRadius="12">
+                        <Entry Text="{Binding MiddleName, Mode=TwoWay}"
+                               TextColor="{AppThemeBinding Light={StaticResource DarkOnLightBackground}, Dark={StaticResource LightOnDarkBackground}}"/>
+                    </sf:SfTextInputLayout>
+
+                    <!-- Разделитель для контактов -->
+                    <BoxView HeightRequest="1" 
+                             BackgroundColor="{AppThemeBinding Light={StaticResource Gray200}, Dark={StaticResource Gray600}}" 
+                             Margin="0, 5, 0, 5"/>
+
+                    <!-- Контактная почта -->
+                    <sf:SfTextInputLayout Hint="Контактная почта"
+                                          IsHintAlwaysFloated="True"
+                                          ContainerType="Outlined"
+                                          Stroke="{AppThemeBinding Light={StaticResource Primary}, Dark={StaticResource Primary}}"
+                                          HintLabelStyle="{StaticResource Body1}"
+                                          OutlineCornerRadius="12">
+                        <Entry Text="{Binding ContactEmail, Mode=TwoWay}"
+                               Keyboard="Email"
+                               TextColor="{AppThemeBinding Light={StaticResource DarkOnLightBackground}, Dark={StaticResource LightOnDarkBackground}}"/>
+                    </sf:SfTextInputLayout>
+
+
+                    <!-- Телефон -->
+                    <sf:SfTextInputLayout Hint="Телефон"
+                                          IsHintAlwaysFloated="True"
+                                          ContainerType="Outlined"
+                                          Stroke="{AppThemeBinding Light={StaticResource Primary}, Dark={StaticResource Primary}}"
+                                          HintLabelStyle="{StaticResource Body1}"
+                                          OutlineCornerRadius="12">
+                        <Entry Text="{Binding Phone, Mode=TwoWay}"
+                               Keyboard="Telephone"
+                               TextColor="{AppThemeBinding Light={StaticResource DarkOnLightBackground}, Dark={StaticResource LightOnDarkBackground}}"/>
+                    </sf:SfTextInputLayout>
+
+                </VerticalStackLayout>
+            </Border>
+
+            <!-- 3. Кнопки -->
+            <HorizontalStackLayout Spacing="12" 
+                                   HorizontalOptions="Center" 
+                                   Margin="0, 10, 0, 0">
+                <!-- Отмена - OutlineButton -->
+                <Button Text="Отмена" 
+                        Style="{StaticResource OutlineButton}" 
+                        Command="{Binding CancelCommand}" 
+                        WidthRequest="150"/>
+
+                <!-- Сохранить - PrimaryButton -->
+                <Button Text="Сохранить" 
+                        Style="{StaticResource PrimaryButton}" 
+                        Command="{Binding SaveCommand}" 
+                        WidthRequest="150"/>
             </HorizontalStackLayout>
 
         </VerticalStackLayout>

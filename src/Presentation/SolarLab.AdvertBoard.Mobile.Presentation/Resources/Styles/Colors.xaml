@@ -35,6 +35,45 @@
     <Color x:Key="Gray900">#212121</Color>
     <Color x:Key="Gray950">#141414</Color>
 
+    <Color x:Key="Success">#4CAF50</Color>
+    <Color x:Key="SuccessDark">#81C784</Color>
+    <Color x:Key="Warning">#FF9800</Color>
+    <Color x:Key="WarningDark">#FFB74D</Color>
+    <Color x:Key="Error">#F44336</Color>
+    <Color x:Key="ErrorDark">#E57373</Color>
+    <Color x:Key="OnPrimary">White</Color>
+    <Color x:Key="AccentDark">#512BD4</Color>
+    <Color x:Key="AccentLight">#D600AA</Color>
+
+     
+    <Color x:Key="CategoryTextLight">#2E2E2E</Color>
+    <!-- Gray700 по сути -->
+    <SolidColorBrush x:Key="CategoryTextLightBrush" Color="{StaticResource CategoryTextLight}" />
+
+    <!-- Custom: Price -->
+    <Color x:Key="PriceLight">#3310A8</Color>
+    <Color x:Key="PriceDark">#B39BFF</Color>
+
+    <!-- Custom: Category border -->
+    <Color x:Key="CategoryBorderLight">#7A5AF5</Color>
+    <Color x:Key="CategoryBorderDark">#D16BFF</Color>
+
+    <!-- Custom: Category text -->
+    <Color x:Key="CategoryTextDark">#E0E0E0</Color>
+
+    <SolidColorBrush x:Key="PriceLightBrush" Color="{StaticResource PriceLight}" />
+    <SolidColorBrush x:Key="PriceDarkBrush" Color="{StaticResource PriceDark}" />
+
+    <SolidColorBrush x:Key="CategoryBorderLightBrush" Color="{StaticResource CategoryBorderLight}" />
+    <SolidColorBrush x:Key="CategoryBorderDarkBrush" Color="{StaticResource CategoryBorderDark}" />
+
+    <SolidColorBrush x:Key="CategoryTextDarkBrush" Color="{StaticResource CategoryTextDark}" />
+
+     
+    <SolidColorBrush x:Key="SuccessBrush" Color="{StaticResource Success}"/>
+    <SolidColorBrush x:Key="WarningBrush" Color="{StaticResource Warning}"/>
+    <SolidColorBrush x:Key="ErrorBrush" Color="{StaticResource Error}"/>
+
     <SolidColorBrush x:Key="PrimaryBrush" Color="{StaticResource Primary}"/>
     <SolidColorBrush x:Key="SecondaryBrush" Color="{StaticResource Secondary}"/>
     <SolidColorBrush x:Key="TertiaryBrush" Color="{StaticResource Tertiary}"/>

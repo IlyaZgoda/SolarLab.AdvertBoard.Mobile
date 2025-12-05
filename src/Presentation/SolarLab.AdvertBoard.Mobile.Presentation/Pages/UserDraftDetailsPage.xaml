@@ -46,8 +46,7 @@
                                            HorizontalOptions="End"
                                            VerticalOptions="Start"
                                            Margin="6"
-                                           BackgroundColor="Transparent"   
-                                           Padding="4">
+                                           BackgroundColor="Transparent">
                                         <Image.GestureRecognizers>
                                             <TapGestureRecognizer
                                                 Command="{Binding BindingContext.DeletePhotoCommand, Source={x:Reference RootPage}}"

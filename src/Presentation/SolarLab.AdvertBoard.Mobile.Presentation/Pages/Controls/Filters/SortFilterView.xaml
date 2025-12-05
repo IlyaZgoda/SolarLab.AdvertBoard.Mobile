@@ -9,56 +9,69 @@
         <pageModels:EnumEqualsConverter x:Key="EnumEqualsConverter" />
     </ContentView.Resources>
 
-    <VerticalStackLayout Spacing="8">
+    <Border StrokeThickness="0"
+            StrokeShape="RoundRectangle 16"
+            Padding="16"
+            BackgroundColor="{AppThemeBinding Light={StaticResource LightSecondaryBackground}, Dark={StaticResource DarkSecondaryBackground}}">
+        <Border.Shadow>
+            <Shadow Brush="{AppThemeBinding Light={StaticResource Gray300}, Dark={StaticResource Black}}"
+                    Opacity="0.15" Offset="0,4" Radius="12"/>
+        </Border.Shadow>
 
-        <Label Text="Сортировка"
-               Style="{StaticResource Title3}"
-               FontSize="18"
-               TextColor="{AppThemeBinding Light=Black, Dark=White}" 
-               HorizontalOptions="Start" />
+        <VerticalStackLayout Spacing="12">
 
-        <VerticalStackLayout Spacing="4">
+            <Label Text="Сортировка"
+                   Style="{StaticResource Title3}" />
 
-            <RadioButton Content="Сначала новые"
-                         GroupName="SortOptions"
-                         Value="{x:Static pageModels:SortOption.Newest}"
-                         IsChecked="{Binding SelectedSortOption,
-                                     Mode=TwoWay,
-                                     Converter={StaticResource EnumEqualsConverter},
-                                     ConverterParameter={x:Static pageModels:SortOption.Newest}}" />
+            <VerticalStackLayout Spacing="4">
 
-            <RadioButton Content="Сначала старые"
-                         GroupName="SortOptions"
-                         Value="{x:Static pageModels:SortOption.Oldest}"
-                         IsChecked="{Binding SelectedSortOption,
-                                     Mode=TwoWay,
-                                     Converter={StaticResource EnumEqualsConverter},
-                                     ConverterParameter={x:Static pageModels:SortOption.Oldest}}" />
+                <RadioButton Content="Сначала новые"
+                             GroupName="SortOptions"
+                             Value="{x:Static pageModels:SortOption.Newest}"
+                             
+                             IsChecked="{Binding SelectedSortOption,
+                                         Mode=TwoWay,
+                                         Converter={StaticResource EnumEqualsConverter},
+                                         ConverterParameter={x:Static pageModels:SortOption.Newest}}" />
 
-            <RadioButton Content="Дешевле"
-                         GroupName="SortOptions"
-                         Value="{x:Static pageModels:SortOption.Cheaper}"
-                         IsChecked="{Binding SelectedSortOption,
-                                     Mode=TwoWay,
-                                     Converter={StaticResource EnumEqualsConverter},
-                                     ConverterParameter={x:Static pageModels:SortOption.Cheaper}}" />
+                <RadioButton Content="Сначала старые"
+                             GroupName="SortOptions"
+                             Value="{x:Static pageModels:SortOption.Oldest}"
+                       
+                             IsChecked="{Binding SelectedSortOption,
+                                         Mode=TwoWay,
+                                         Converter={StaticResource EnumEqualsConverter},
+                                         ConverterParameter={x:Static pageModels:SortOption.Oldest}}" />
 
-            <RadioButton Content="Дороже"
-                         GroupName="SortOptions"
-                         Value="{x:Static pageModels:SortOption.Expensive}"
-                         IsChecked="{Binding SelectedSortOption,
-                                     Mode=TwoWay,
-                                     Converter={StaticResource EnumEqualsConverter},
-                                     ConverterParameter={x:Static pageModels:SortOption.Expensive}}" />
+                <RadioButton Content="Дешевле"
+                             GroupName="SortOptions"
+                             Value="{x:Static pageModels:SortOption.Cheaper}"
+                           
+                             IsChecked="{Binding SelectedSortOption,
+                                         Mode=TwoWay,
+                                         Converter={StaticResource EnumEqualsConverter},
+                                         ConverterParameter={x:Static pageModels:SortOption.Cheaper}}" />
 
-            <RadioButton Content="По умолчанию"
-                         GroupName="SortOptions"
-                         Value="{x:Static pageModels:SortOption.Default}"
-                         IsChecked="{Binding SelectedSortOption,
-                                     Mode=TwoWay,
-                                     Converter={StaticResource EnumEqualsConverter},
-                                     ConverterParameter={x:Static pageModels:SortOption.Default}}" />
+                <RadioButton Content="Дороже"
+                             GroupName="SortOptions"
+                             Value="{x:Static pageModels:SortOption.Expensive}"
+                            
+                             IsChecked="{Binding SelectedSortOption,
+                                         Mode=TwoWay,
+                                         Converter={StaticResource EnumEqualsConverter},
+                                         ConverterParameter={x:Static pageModels:SortOption.Expensive}}" />
+
+                <RadioButton Content="По умолчанию"
+                             GroupName="SortOptions"
+                             Value="{x:Static pageModels:SortOption.Default}"
+                   
+                             IsChecked="{Binding SelectedSortOption,
+                                         Mode=TwoWay,
+                                         Converter={StaticResource EnumEqualsConverter},
+                                         ConverterParameter={x:Static pageModels:SortOption.Default}}" />
+            </VerticalStackLayout>
+
         </VerticalStackLayout>
+    </Border>
 
-    </VerticalStackLayout>
 </ContentView>
