@@ -2,6 +2,7 @@
 using CommunityToolkit.Maui;
 using FFImageLoading.Maui;
 using Microsoft.Extensions.Logging;
+using Refit;
 using SolarLab.AdvertBoard.Mobile.Presentation.Infrastructure.Http;
 using Syncfusion.Maui.Core.Hosting;
 using Syncfusion.Maui.Toolkit.Hosting;
@@ -85,6 +86,8 @@ namespace SolarLab.AdvertBoard.Mobile.Presentation
             builder.Services.AddTransient<PublishedUserAdvertsPageModel>();
             builder.Services.AddTransient<UserDraftsPageModel>();
             builder.Services.AddTransient<UserDraftDetailsPageModel>();
+            builder.Services.AddTransient<AddDraftPageModel>();
+            builder.Services.AddTransient<AddDraftImagesPageModel>();
             builder.Services.AddSingleton<ProjectListPageModel>();
             builder.Services.AddSingleton<ManageMetaPageModel>();
 

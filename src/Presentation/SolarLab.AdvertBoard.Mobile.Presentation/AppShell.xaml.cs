@@ -21,6 +21,8 @@ namespace SolarLab.AdvertBoard.Mobile.Presentation
             Routing.RegisterRoute("published-user-adverts", typeof(PublishedUserAdvertsPage));
             Routing.RegisterRoute("user-drafts", typeof(UserDraftsPage));
             Routing.RegisterRoute("draft-details", typeof(UserDraftDetailsPage));
+            Routing.RegisterRoute("create-draft", typeof(AddDraftPage));
+            Routing.RegisterRoute("create-draft-images", typeof(AddDraftImagesPage));
         }
         public static async Task DisplaySnackbarAsync(string message)
         {

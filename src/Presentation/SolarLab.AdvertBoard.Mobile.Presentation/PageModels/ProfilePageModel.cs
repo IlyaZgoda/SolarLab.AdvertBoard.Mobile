@@ -137,5 +137,13 @@ namespace SolarLab.AdvertBoard.Mobile.Presentation.PageModels
                 System.Diagnostics.Debug.WriteLine($"Ошибка загрузки профиля: {ex}");
             }
         }
+
+        [RelayCommand]
+        private async Task CreateAdvertAsync()
+        {
+            // Переход на страницу создания черновика
+            await Shell.Current.GoToAsync("create-draft");
+        }
+
     }
 }
