@@ -301,12 +301,12 @@ namespace SolarLab.AdvertBoard.Mobile.Presentation.PageModels
                 await _advertClient.PublishDraftAsync(Advert.Id, _auth.Jwt!);
 
                 // Обновляем локально (по желанию, можно пропустить)
-                Advert = await _advertClient.GetDraftDetailsAsync(Advert.Id, _auth.Jwt!);
+               // Advert = await _advertClient.GetDraftDetailsAsync(Advert.Id, _auth.Jwt!);
 
                 await Application.Current.MainPage.DisplayAlert("Успех", "Объявление опубликовано", "OK");
 
                 // Возврат на предыдущую страницу
-                await Shell.Current.GoToAsync("..");
+                await Shell.Current.GoToAsync("profile");
             }
             catch (HttpRequestException ex)
             {

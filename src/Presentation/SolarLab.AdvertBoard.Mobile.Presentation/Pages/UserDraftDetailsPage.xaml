@@ -1,14 +1,17 @@
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:pageModels="clr-namespace:SolarLab.AdvertBoard.Mobile.Presentation.PageModels"
+             xmlns:sf="clr-namespace:Syncfusion.Maui.Toolkit.TextInputLayout;assembly=Syncfusion.Maui.Toolkit"
              x:Class="SolarLab.AdvertBoard.Mobile.Presentation.Pages.UserDraftDetailsPage"
              x:Name="RootPage"
-             Title="Черновик">
+             Title="Черновик"
+             BackgroundColor="{AppThemeBinding Light={StaticResource LightBackground}, Dark={StaticResource DarkBackground}}">
 
     <ContentPage.Resources>
         <ResourceDictionary>
             <pageModels:EqualsZeroConverter x:Key="EqualsZeroConverter"/>
             <pageModels:GreaterThanZeroConverter x:Key="GreaterThanZeroConverter"/>
+
         </ResourceDictionary>
     </ContentPage.Resources>
 
@@ -19,25 +22,29 @@
             <!-- БЛОК ФОТО -->
             <!-- ========================= -->
             <VerticalStackLayout Spacing="12">
-
                 <Label Text="Фотографии" FontSize="18" FontAttributes="Bold" />
 
-                <StackLayout>
-                    <CollectionView ItemsSource="{Binding AdvertImages}"
-                                    HeightRequest="250"
-                                    HorizontalScrollBarVisibility="Never"
-                                    IsVisible="{Binding AdvertImages.Count, Converter={StaticResource GreaterThanZeroConverter}}">
-                        <CollectionView.ItemsLayout>
-                            <LinearItemsLayout Orientation="Horizontal" ItemSpacing="8" />
-                        </CollectionView.ItemsLayout>
+                <CollectionView ItemsSource="{Binding AdvertImages}"
+                                HeightRequest="250"
+                                HorizontalScrollBarVisibility="Never"
+                                IsVisible="{Binding AdvertImages.Count, Converter={StaticResource GreaterThanZeroConverter}}">
+                    <CollectionView.ItemsLayout>
+                        <LinearItemsLayout Orientation="Horizontal" ItemSpacing="8" />
+                    </CollectionView.ItemsLayout>
 
-                        <CollectionView.ItemTemplate>
-                            <DataTemplate>
+                    <CollectionView.ItemTemplate>
+                        <DataTemplate>
+                            <Border StrokeThickness="0"
+                                    StrokeShape="RoundRectangle 12"
+                                    BackgroundColor="{AppThemeBinding Light={StaticResource LightSecondaryBackground}, Dark={StaticResource DarkSecondaryBackground}}">
+                                <Border.Shadow>
+                                    <Shadow Brush="{AppThemeBinding Light={StaticResource Gray300}, Dark={StaticResource Black}}"
+                                            Opacity="0.10" Offset="0,4" Radius="8"/>
+                                </Border.Shadow>
+
                                 <Grid WidthRequest="250" HeightRequest="250">
-
-                                    <!-- Фото -->
                                     <Image Source="{Binding ImageSource}"
-                                           Aspect="AspectFill" />
+                                           Aspect="AspectFill"/>
 
                                     <!-- Крестик удаления -->
                                     <Image Source="{StaticResource IconDelete}"
@@ -53,22 +60,20 @@
                                                 CommandParameter="{Binding Id}" />
                                         </Image.GestureRecognizers>
                                     </Image>
-
                                 </Grid>
-                            </DataTemplate>
-                        </CollectionView.ItemTemplate>
-                    </CollectionView>
+                            </Border>
+                        </DataTemplate>
+                    </CollectionView.ItemTemplate>
+                </CollectionView>
 
-                    <Label Text="Фотографий пока нет"
-                           HorizontalOptions="Center"
-                           FontAttributes="Italic"
-                           IsVisible="{Binding AdvertImages.Count, Converter={StaticResource EqualsZeroConverter}}" />
-                </StackLayout>
+                <Label Text="Фотографий пока нет"
+                       HorizontalOptions="Center"
+                       FontAttributes="Italic"
+                       IsVisible="{Binding AdvertImages.Count, Converter={StaticResource EqualsZeroConverter}}" />
 
                 <Button Text="Добавить фото"
                         Command="{Binding AddPhotoCommand}"
                         HorizontalOptions="Center" />
-
             </VerticalStackLayout>
 
             <!-- ========================= -->
@@ -76,42 +81,49 @@
             <!-- ========================= -->
             <VerticalStackLayout Spacing="16">
 
-                <Label Text="Редактировать"
-                       FontSize="18"
-                       FontAttributes="Bold"
-                       Margin="0,20,0,0"/>
+                <Label Text="Редактировать" FontSize="18" FontAttributes="Bold" Margin="0,0,0,0"/>
 
-                <Label Text="Заголовок" FontSize="12" TextColor="#555" />
-                <Entry Text="{Binding Advert.Title}"
-                       Placeholder="Введите заголовок"
-                       FontSize="20"
-                       FontAttributes="Bold"
-                       BackgroundColor="{AppThemeBinding Light=#f0f0f0, Dark=#2c2c2c}" />
+                <!-- Заголовок -->
+                <sf:SfTextInputLayout Hint="Заголовок"
+                                      ContainerType="Outlined"
+                                      IsHintAlwaysFloated="True"
+                                      OutlineCornerRadius="12"
+                                      Stroke="{AppThemeBinding Light={StaticResource Gray300}, Dark={StaticResource Primary}}">
+                    <Entry Text="{Binding Advert.Title, Mode=TwoWay}"
+                           Style="{StaticResource Body1}"
+                           TextColor="{AppThemeBinding Light={StaticResource DarkOnLightBackground}, Dark={StaticResource LightOnDarkBackground}}" />
+                </sf:SfTextInputLayout>
 
-                <Label Text="Цена" FontSize="12" TextColor="#555" />
-                <Entry Text="{Binding Advert.Price}"
-                       Placeholder="Введите цену"
-                       Keyboard="Numeric"
-                       FontSize="18"
-                       BackgroundColor="{AppThemeBinding Light=#f0f0f0, Dark=#2c2c2c}" />
+                <!-- Цена -->
+                <sf:SfTextInputLayout Hint="Цена"
+                                      ContainerType="Outlined"
+                                      IsHintAlwaysFloated="True"
+                                      OutlineCornerRadius="12"
+                                      Stroke="{AppThemeBinding Light={StaticResource Gray300}, Dark={StaticResource Primary}}">
+                    <Entry Text="{Binding Advert.Price, Mode=TwoWay}"
+                           Keyboard="Numeric"
+                           Style="{StaticResource Body1}"
+                           TextColor="{AppThemeBinding Light={StaticResource DarkOnLightBackground}, Dark={StaticResource LightOnDarkBackground}}" />
+                </sf:SfTextInputLayout>
 
-                <Label Text="Категория" FontSize="12" TextColor="#555" />
+                <!-- Категория -->
+                <Picker ItemsSource="{Binding LeafCategories}"
+                        ItemDisplayBinding="{Binding Title}"
+                        SelectedItem="{Binding SelectedCategory}"
+                        Title="Выберите категорию" 
+                        />
 
-                <Picker
-    ItemsSource="{Binding LeafCategories}"
-    ItemDisplayBinding="{Binding Title}"
-    SelectedItem="{Binding SelectedCategory}"
-    Title="Выберите категорию" />
-
-
-
-
-                <Label Text="Описание" FontSize="12" TextColor="#555" />
-                <Editor Text="{Binding Advert.Description}"
-                        Placeholder="Введите описание"
-                        FontSize="16"
-                        HeightRequest="120"
-                        BackgroundColor="{AppThemeBinding Light=#f0f0f0, Dark=#2c2c2c}" />
+                <!-- Описание -->
+                <sf:SfTextInputLayout Hint="Описание"
+                                      ContainerType="Outlined"
+                                      IsHintAlwaysFloated="True"
+                                      OutlineCornerRadius="12"
+                                      Stroke="{AppThemeBinding Light={StaticResource Gray300}, Dark={StaticResource Primary}}">
+                    <Editor Text="{Binding Advert.Description, Mode=TwoWay}"
+                            FontSize="16"
+                            HeightRequest="120"
+                            BackgroundColor="{AppThemeBinding Light={StaticResource LightSecondaryBackground}, Dark={StaticResource DarkSecondaryBackground}}"/>
+                </sf:SfTextInputLayout>
 
             </VerticalStackLayout>
 
@@ -121,33 +133,34 @@
             <VerticalStackLayout Spacing="4">
                 <Label Text="{Binding Advert.CreatedAt, StringFormat='Создано: {0:dd.MM.yyyy HH:mm}'}"
                        FontSize="12"
-                       TextColor="#555" />
+                       TextColor="{AppThemeBinding Light={StaticResource Gray600}, Dark={StaticResource Gray100}}" />
 
                 <Label Text="{Binding Advert.UpdatedAt, StringFormat='Обновлено: {0:dd.MM.yyyy HH:mm}'}"
                        FontSize="12"
-                       TextColor="#555"
+                       TextColor="{AppThemeBinding Light={StaticResource Gray600}, Dark={StaticResource Gray100}}"
                        IsVisible="{Binding Advert.UpdatedAt, Converter={StaticResource NotNullToBoolConverter}}" />
             </VerticalStackLayout>
 
-            <Button Text="Сохранить"
-        Command="{Binding SaveDraftCommand}"
-        Style="{StaticResource PrimaryButton}"
-        HorizontalOptions="Fill" />
+            <!-- ========================= -->
+            <!-- КНОПКИ -->
+            <!-- ========================= -->
+            <VerticalStackLayout Spacing="12">
+                <Button Text="Сохранить"
+                        Command="{Binding SaveDraftCommand}"
+                        Style="{StaticResource PrimaryButton}" />
 
-            <Button Text="Опубликовать"
-        Command="{Binding PublishDraftCommand}"
-        Style="{StaticResource PrimaryButton}"
-        HorizontalOptions="Fill"
-        BackgroundColor="Green"
-        TextColor="White" />
+                <Button Text="Опубликовать"
+                        Command="{Binding PublishDraftCommand}"
+                        Style="{StaticResource PrimaryButton}"
+                        BackgroundColor="{StaticResource SuccessColor}"
+                        TextColor="White" />
 
-            <Button Text="Удалить черновик"
-        Command="{Binding DeleteDraftCommand}"
-        Style="{StaticResource PrimaryButton}"
-        HorizontalOptions="Fill"
-        BackgroundColor="Red"
-        TextColor="White" />
-
+                <Button Text="Удалить черновик"
+                        Command="{Binding DeleteDraftCommand}"
+                        Style="{StaticResource OutlineButton}"
+                        BackgroundColor="{StaticResource ErrorColor}"
+                        TextColor="Red" />
+            </VerticalStackLayout>
 
         </VerticalStackLayout>
     </ScrollView>

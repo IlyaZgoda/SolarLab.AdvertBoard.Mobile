@@ -2,31 +2,70 @@
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:vm="clr-namespace:SolarLab.AdvertBoard.Mobile.Presentation.PageModels"
+             xmlns:sf="clr-namespace:Syncfusion.Maui.Toolkit.TextInputLayout;assembly=Syncfusion.Maui.Toolkit"
              x:Class="SolarLab.AdvertBoard.Mobile.Presentation.Pages.AddDraftPage"
              x:DataType="vm:AddDraftPageModel"
-             Title="Создание черновика">
+             Title="Создание черновика"
+             BackgroundColor="{AppThemeBinding Light={StaticResource LightBackground}, Dark={StaticResource DarkBackground}}">
 
     <ScrollView>
-        <VerticalStackLayout Padding="20" Spacing="20">
+        <VerticalStackLayout Padding="20" Spacing="24">
 
-            <Label Text="Заголовок" />
-            <Entry Text="{Binding Title}" Placeholder="Введите заголовок" />
+            <!-- Заголовок -->
+            <sf:SfTextInputLayout Hint="Заголовок"
+                                  ContainerType="Outlined"
+                                  IsHintAlwaysFloated="True"
+                                  OutlineCornerRadius="12"
+                                  Stroke="{AppThemeBinding Light={StaticResource Gray300}, Dark={StaticResource Primary}}">
+                <Entry Text="{Binding Title, Mode=TwoWay}"
+                       Style="{StaticResource Body1}"
+                       TextColor="{AppThemeBinding Light={StaticResource DarkOnLightBackground}, Dark={StaticResource LightOnDarkBackground}}"
+                       Placeholder="Введите заголовок"/>
+            </sf:SfTextInputLayout>
 
-            <Label Text="Описание" />
-            <Editor Text="{Binding Description}"
-                    Placeholder="Введите описание"
-                    HeightRequest="120" />
+            <!-- Описание -->
+            <sf:SfTextInputLayout Hint="Описание"
+                                  ContainerType="Outlined"
+                                  IsHintAlwaysFloated="True"
+                                  OutlineCornerRadius="12"
+                                  Stroke="{AppThemeBinding Light={StaticResource Gray300}, Dark={StaticResource Primary}}">
+                <Editor Text="{Binding Description, Mode=TwoWay}"
+                        FontSize="16"
+                        HeightRequest="120"
+                        TextColor="{AppThemeBinding Light={StaticResource DarkOnLightBackground}, Dark={StaticResource LightOnDarkBackground}}"
+                        Placeholder="Введите описание"/>
+            </sf:SfTextInputLayout>
 
-            <Label Text="Цена" />
-            <Entry Text="{Binding Price}" Keyboard="Numeric" />
+            <!-- Цена -->
+            <sf:SfTextInputLayout Hint="Цена"
+                                  ContainerType="Outlined"
+                                  IsHintAlwaysFloated="True"
+                                  OutlineCornerRadius="12"
+                                  Stroke="{AppThemeBinding Light={StaticResource Gray300}, Dark={StaticResource Primary}}">
+                <Entry Text="{Binding Price, Mode=TwoWay}"
+                       Keyboard="Numeric"
+                       Style="{StaticResource Body1}"
+                       TextColor="{AppThemeBinding Light={StaticResource DarkOnLightBackground}, Dark={StaticResource LightOnDarkBackground}}"
+                       Placeholder="Введите цену"/>
+            </sf:SfTextInputLayout>
 
-            <Label Text="Категория" />
-            <Picker ItemsSource="{Binding Categories}"
-                    ItemDisplayBinding="{Binding Title}"
-                    SelectedItem="{Binding SelectedCategory}" />
+            <!-- Категория -->
+            <sf:SfTextInputLayout Hint="Категория"
+                                  ContainerType="Outlined"
+                                  IsHintAlwaysFloated="True"
+                                  OutlineCornerRadius="12"
+                                  Stroke="{AppThemeBinding Light={StaticResource Gray300}, Dark={StaticResource Primary}}">
+                <Picker ItemsSource="{Binding Categories}"
+                        ItemDisplayBinding="{Binding Title}"
+                        SelectedItem="{Binding SelectedCategory}"
+                        Title="Выберите категорию"/>
+            </sf:SfTextInputLayout>
 
-            <Button Text="Создать черновик"
-                    Command="{Binding CreateDraftCommand}" />
+            <!-- Кнопка создания -->
+            <Button Text="Далее"
+                    Command="{Binding CreateDraftCommand}"
+                    Style="{StaticResource PrimaryButton}"
+                    HorizontalOptions="Fill" />
 
         </VerticalStackLayout>
     </ScrollView>
